@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Вход для администратора</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: lightgrey;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 300px;
+            margin: auto;
+        }
+        input[type="text"], input[type="password"] {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 3px;
+            border: none;
+            outline: none;
+            width: 280px;
+        }
+        input[type="submit"] {
+            padding: 5px 20px;
+            border-radius: 3px;
+            border: none;
+            outline: none;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0069d9;
+        }
+        label {
+            text-align: left;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<form th:action="@{/store/admin/login}" th:method="POST" enctype="multipart/form-data">
+    <div style="color: black; text-align: center;">Вход в панель администратора.</div>
+    <div th:if="${param.error}">
+        <div style="color: red; text-align: center;">Неверный логин или пароль.</div>
+    </div>
+    <div th:if="${param.logout}">
+        <div style="color: green; text-align: center;">Вы вышли из панели администратора.</div>
+    </div>
+    <div><label> Логин: <input type="text" name="username"/> </label></div>
+    <div><label> Пароль: <input type="password" name="password"/> </label></div>
+    <div><input type="submit" value="Войти"/></div>
+</form>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-sources>
+      <data-source id="b226b630-0e3f-486a-b348-4cbe7009cf04" name="OnlineStore" url="jdbc:postgresql://localhost:5432/online-store" driverClass="org.postgresql.Driver" />
+      <data-source id="de9c6323-2dbc-4cf6-b4b5-d0e53f98183e" name="OnlineStoreTest" url="jdbc:postgresql://localhost:5432/online-store-test" driverClass="org.postgresql.Driver" />
+    </data-sources>
+  </component>
+</project>
