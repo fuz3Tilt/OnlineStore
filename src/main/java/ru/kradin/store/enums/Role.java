@@ -1,4 +1,4 @@
-package ru.kradin.store.models.enums;
+package ru.kradin.store.enums;
 
 public enum Role {
     ROLE_ADMIN("ROLE_ADMIN");

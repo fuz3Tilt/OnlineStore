@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kradin.store.exceptions.NameAlreadyUseException;
-import ru.kradin.store.models.enums.Status;
+import ru.kradin.store.enums.Status;
 import ru.kradin.store.models.Catalog;
 import ru.kradin.store.models.Goods;
 import ru.kradin.store.repositories.CatalogRepository;

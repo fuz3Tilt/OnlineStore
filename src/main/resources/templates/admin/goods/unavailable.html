@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Список каталогов</title>
+    <title>Недоступные товары</title>
     <style>
         h2 {
             text-align: center;
@@ -23,14 +23,14 @@
         input[type="submit"]:hover {
             background-color: #0069d9;
         }
-        .catalogs-container {
+        .goods-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             max-width: 1000px;
             margin: 0 auto;
         }
-        .catalog {
+        .goods {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -38,23 +38,31 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            width: 200px;
         }
-        .catalog img {
+        .goods img {
             width: 128px;
             height: 128px;
             margin-bottom: 10px;
         }
-        .catalog p {
+        .goods p {
             margin: 0;
             margin-bottom: 10px;
             text-align: center;
         }
-        .catalog form {
+        .goods .description {
+            width: 100%;
+            height: 70px;
+            overflow-y: scroll;
+            word-break: break-all;
+            text-align: left;
+        }
+        .goods form {
             display: flex;
             justify-content: center;
             margin-top: 10px;
         }
-        .catalog input[type="submit"] {
+        .goods input[type="submit"] {
             padding: 5px 20px;
             border-radius: 3px;
             border: none;
@@ -63,35 +71,31 @@
             color: #fff;
             cursor: pointer;
         }
-        .catalog input[type="submit"]:hover {
+        .goods input[type="submit"]:hover {
             background-color: #0069d9;
         }
     </style>
 </head>
 <body>
-<h2>Каталоги</h2>
-<form th:action="@{/store/admin/goods/unavailable}" th:method="GET">
-    <input type="submit" value="Все недоступные товары" class="goods"/>
-</form>
-<form th:action="@{/store/admin/catalogs/new}" th:method="GET">
-    <input type="submit" value="Добавить каталог" class="catalog"/>
-</form>
-<div class="catalogs-container">
-    <div th:each="catalogValidator : ${catalogList}" class="catalog">
-        <img th:src="@{/store/images/{id}(id=${catalogValidator.getImageName})}" alt="Изображение каталога" />
-        <p th:text="${catalogValidator.getName}">Название</p>
-        <form th:action="@{/store/admin/catalogs/{id}(id=${catalogValidator.getId})}" th:method="GET">
-            <input type="submit" value="Ассортимент"/>
+<h2>Товары</h2>
+<div class="goods-container">
+    <div th:each="goodsValidator : ${goodsList}" class="goods">
+        <img th:src="@{/store/images/{id}(id=${goodsValidator.getImageName})}" alt="Изображение товара" />
+        <p th:text="${goodsValidator.getName}">Название</p>
+        <p class="description" th:text="${goodsValidator.getDescription}">Описание</p>
+        <p th:text="${goodsValidator.getPrice}">Цена</p>
+        <p th:text="${goodsValidator.getStatus().getStatus()}" th:style="${goodsValidator.getStatus() == T(ru.kradin.store.enums.Status).AVAILABLE ?  'color:green' : 'color:red'}">Статус</p>
+        <form th:action="@{/store/admin/goods/{id}/edit(id=${goodsValidator.getId})}" th:method="GET">
+            <input type="hidden" name="from" th:value="${'/store/admin/catalogs/' + goodsValidator.getCatalogId()}"/>
+            <input type="submit" value="Редактировать"/>
         </form>
-        <form th:action="@{/store/admin/catalogs/{id}/edit(id=${catalogValidator.getId})}" th:method="GET">
-            <input type="submit" value="Изменить"/>
-        </form>
-        <form th:action="@{/store/admin/catalogs/{id}(id=${catalogValidator.getId})}" th:method="DELETE">
+        <form th:action="@{/store/admin/goods/{id}(id=${goodsValidator.getId})}" th:method="DELETE">
+            <input type="hidden" name="from" th:value="${'/store/admin/catalogs/' + goodsValidator.getCatalogId()}"/>
             <input type="submit" value="Удалить"/>
         </form>
     </div>
 </div>
-<form th:action="@{/store/admin}" th:method="GET">
+<form th:action="@{/store/admin/catalogs}" th:method="GET">
     <input type="submit" value="Назад"/>
 </form>
 </body>

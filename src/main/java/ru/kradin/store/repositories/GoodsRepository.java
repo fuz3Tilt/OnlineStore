@@ -1,7 +1,7 @@
 package ru.kradin.store.repositories;
 
 import org.springframework.data.repository.CrudRepository;
-import ru.kradin.store.models.enums.Status;
+import ru.kradin.store.enums.Status;
 import ru.kradin.store.models.Goods;
 
 import java.util.List;

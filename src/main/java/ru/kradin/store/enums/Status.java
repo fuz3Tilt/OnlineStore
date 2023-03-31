@@ -1,4 +1,4 @@
-package ru.kradin.store.models.enums;
+package ru.kradin.store.enums;
 
 public enum Status {
     AVAILABLE("Есть в наличии"),

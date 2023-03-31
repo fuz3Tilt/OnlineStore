@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import ru.kradin.store.exceptions.NameAlreadyUseException;
-import ru.kradin.store.models.enums.Status;
+import ru.kradin.store.enums.Status;
 import ru.kradin.store.services.interfaces.CatalogService;
 import ru.kradin.store.services.interfaces.GoodsService;
 import ru.kradin.store.validators.CatalogValidator;

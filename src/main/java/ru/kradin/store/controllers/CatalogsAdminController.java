@@ -9,6 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.kradin.store.exceptions.NameAlreadyUseException;
 import ru.kradin.store.services.interfaces.CatalogService;
+import ru.kradin.store.services.interfaces.GoodsService;
 import ru.kradin.store.utils.ImageErrorsUtil;
 import ru.kradin.store.validators.CatalogValidator;
 
@@ -19,10 +20,13 @@ import java.io.IOException;
 public class CatalogsAdminController {
 
     @Autowired
-    ImageErrorsUtil imageErrorsUtil;
+    private ImageErrorsUtil imageErrorsUtil;
 
     @Autowired
     private CatalogService catalogService;
+
+    @Autowired
+    private GoodsService goodsService;
 
     @GetMapping
     public String catalogs(Model model){
@@ -36,8 +40,7 @@ public class CatalogsAdminController {
     }
 
     @PostMapping
-    public String addNewCatalog(@ModelAttribute("catalogValidator")
-                                @Valid CatalogValidator catalogValidator
+    public String addNewCatalog(@ModelAttribute("catalogValidator") @Valid CatalogValidator catalogValidator
                                 ,BindingResult bindingResult) throws IOException {
 
         imageErrorsUtil.addErrorsIfExist(catalogValidator.getImageToUpload(),bindingResult,"catalogValidator");
@@ -57,8 +60,10 @@ public class CatalogsAdminController {
     }
 
     @GetMapping("/{catalog_id}")
-    public String catalog(){
-        return "admin/catalog/catalog";
+    public String catalogGoods(Model model, @PathVariable("catalog_id") int id){
+        model.addAttribute("catalog_id", id);
+        model.addAttribute("goodsList", goodsService.getAllCatalogGoodsByCatalogId(id));
+        return "admin/catalog/catalog-goods";
     }
 
     @GetMapping("/{catalog_id}/edit")
@@ -68,10 +73,11 @@ public class CatalogsAdminController {
     }
 
     @PatchMapping("/{catalog_id}")
-    public String updateCatalog(@ModelAttribute("catalogValidator")
-                                @Valid CatalogValidator catalogValidator
+    public String updateCatalog(@ModelAttribute("catalogValidator") @Valid CatalogValidator catalogValidator
                                 ,BindingResult bindingResult
                                 ,@PathVariable("catalog_id") int id) throws IOException {
+
+        catalogValidator.setId(id);
 
         if(!catalogValidator.getImageToUpload().isEmpty())
             imageErrorsUtil.addErrorsIfExist(catalogValidator.getImageToUpload(),bindingResult,"catalogValidator");
@@ -80,7 +86,6 @@ public class CatalogsAdminController {
             return "admin/catalog/edit";
 
         try {
-            catalogValidator.setId(id);
             catalogService.saveCatalog(catalogValidator);
         } catch (NameAlreadyUseException e) {
             FieldError error = new FieldError("catalogValidator", "name", "Название каталога уже используется");

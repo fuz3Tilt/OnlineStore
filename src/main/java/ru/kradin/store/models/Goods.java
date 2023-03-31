@@ -1,7 +1,7 @@
 package ru.kradin.store.models;
 
 import jakarta.persistence.*;
-import ru.kradin.store.models.enums.Status;
+import ru.kradin.store.enums.Status;
 
 import java.util.Objects;
 

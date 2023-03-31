@@ -1,7 +1,7 @@
 package ru.kradin.store.models;
 
 import jakarta.persistence.*;
-import ru.kradin.store.models.enums.Role;
+import ru.kradin.store.enums.Role;
 
 @Entity
 @Table(name = "usr")

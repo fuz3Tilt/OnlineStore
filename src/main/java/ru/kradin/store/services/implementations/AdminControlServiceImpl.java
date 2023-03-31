@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kradin.store.models.enums.Role;
+import ru.kradin.store.enums.Role;
 import ru.kradin.store.models.User;
 import ru.kradin.store.repositories.UserRepository;
 import ru.kradin.store.services.interfaces.AdminControlService;

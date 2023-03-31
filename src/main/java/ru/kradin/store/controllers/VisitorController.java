@@ -15,16 +15,16 @@ public class VisitorController {
 
     @GetMapping("/catalogs")
     public String allCatalogs(){
-        return null;
+        return "visitor/catalogs";
     }
 
     @GetMapping("/catalogs/{catalog_id}")
     public String catalog(){
-        return null;
+        return "visitor/catalog-goods";
     }
 
     @GetMapping("/goods/{goods_id}")
     public String goods(){
-        return null;
+        return "visitor/goods";
     }
 }

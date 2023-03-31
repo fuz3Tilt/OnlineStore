@@ -1,9 +1,10 @@
 package ru.kradin.store.validators;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
-import ru.kradin.store.models.enums.Status;
+import ru.kradin.store.enums.Status;
 
 import java.util.Objects;
 
@@ -17,11 +18,10 @@ public class GoodsValidator {
     private String description;
     private MultipartFile imageToUpload;
     private String imageName;
-    private Status status = Status.AVAILABLE;
-    @NotEmpty(message = "Цена не может быть пустой")
-    @Size(min = 0, message = "Цена должна быть больше 0")
+    private Status status;
+    @Min(value = 0, message = "Цена должна быть больше 0")
     private long price;
-    @NotEmpty(message = "Не выбран каталог для товара")
+    @Min(value = 0,message = "Не выбран каталог для товара")
     private int catalogId;
 
     public int getId() {

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import ru.kradin.store.models.enums.Status;
+import ru.kradin.store.enums.Status;
 import ru.kradin.store.models.Catalog;
 import ru.kradin.store.models.Goods;
 
