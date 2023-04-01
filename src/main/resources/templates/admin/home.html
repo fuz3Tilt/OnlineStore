@@ -48,7 +48,7 @@
 <div class="admin-panel">
     <h2 th:inline="text">Привет <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h2>
     <form th:action="@{/store/admin/catalogs}" th:method="GET">
-        <input type="submit" value="Управление магазином"/>
+        <input type="submit" value="Управление ассортиментом"/>
     </form>
     <form th:action="@{/store/admin/update}" th:method="GET">
         <input type="submit" value="Изменить пароль"/>

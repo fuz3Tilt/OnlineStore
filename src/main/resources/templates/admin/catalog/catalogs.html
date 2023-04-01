@@ -81,7 +81,7 @@
         <img th:src="@{/store/images/{id}(id=${catalogValidator.getImageName})}" alt="Изображение каталога" />
         <p th:text="${catalogValidator.getName}">Название</p>
         <form th:action="@{/store/admin/catalogs/{id}(id=${catalogValidator.getId})}" th:method="GET">
-            <input type="submit" value="Ассортимент"/>
+            <input type="submit" value="Посмотреть"/>
         </form>
         <form th:action="@{/store/admin/catalogs/{id}/edit(id=${catalogValidator.getId})}" th:method="GET">
             <input type="submit" value="Изменить"/>
