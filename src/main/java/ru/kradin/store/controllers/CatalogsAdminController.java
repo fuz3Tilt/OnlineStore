@@ -20,9 +20,6 @@ import java.io.IOException;
 public class CatalogsAdminController {
 
     @Autowired
-    private ImageErrorsUtil imageErrorsUtil;
-
-    @Autowired
     private CatalogService catalogService;
 
     @Autowired
@@ -43,7 +40,7 @@ public class CatalogsAdminController {
     public String addNewCatalog(@ModelAttribute("catalogValidator") @Valid CatalogValidator catalogValidator
                                 ,BindingResult bindingResult) throws IOException {
 
-        imageErrorsUtil.addErrorsIfExist(catalogValidator.getImageToUpload(),bindingResult,"catalogValidator");
+        ImageErrorsUtil.addErrorsIfExist(catalogValidator.getImageToUpload(),bindingResult,"catalogValidator");
 
         if (bindingResult.hasErrors())
             return "admin/catalog/new";
@@ -80,7 +77,7 @@ public class CatalogsAdminController {
         catalogValidator.setId(id);
 
         if(!catalogValidator.getImageToUpload().isEmpty())
-            imageErrorsUtil.addErrorsIfExist(catalogValidator.getImageToUpload(),bindingResult,"catalogValidator");
+            ImageErrorsUtil.addErrorsIfExist(catalogValidator.getImageToUpload(),bindingResult,"catalogValidator");
 
         if(bindingResult.hasErrors())
             return "admin/catalog/edit";

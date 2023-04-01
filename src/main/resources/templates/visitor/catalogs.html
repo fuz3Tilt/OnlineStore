@@ -1,10 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Каталоги</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        nav li a {
+            display: block;
+            padding: 10px;
+            color: #fff;
+            text-decoration: none;
+        }
+        nav li a:hover {
+            background-color: #555;
+        }
+        .catalogs {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
+            gap: 20px;
+        }
+        @media screen and (max-width: 1024px) {
+            .catalogs {
+                justify-content: center;
+            }
+        }
+        .catalog {
+            width: calc(25% - 20px);
+            height: 256px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        .catalog img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .catalog h3 {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            text-align: center;
+            font-size: 24px;
+        }
+        .header-title {
+            text-align: center;
+            font-size: 30px;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-
+<header>
+    <div class="container">
+        <div class="logo">Онлайн магазин</div>
+        <nav>
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li><a href="https://t.me/fuz3Tilt">Контакты</a></li>
+                <li><a href="https://github.com/fuz3Tilt/OnlineStore">О нас</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<div class="header-title">Список каталогов</div>
+<div class="catalogs">
+    <div th:each="catalogValidator : ${catalogList}" class="catalog" th:onclick="|window.location.href='/catalogs/${catalogValidator.getId}'|">
+        <img th:src="@{/store/images/{id}(id=${catalogValidator.getImageName})}" alt="Изображение каталога"/>
+        <h3 th:text="${catalogValidator.getName}">Каталог</h3>
+    </div>
+</div>
 </body>
 </html>

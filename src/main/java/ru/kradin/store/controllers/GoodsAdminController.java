@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.kradin.store.exceptions.NameAlreadyUseException;
-import ru.kradin.store.models.Goods;
 import ru.kradin.store.services.interfaces.GoodsService;
 import ru.kradin.store.utils.ImageErrorsUtil;
 import ru.kradin.store.validators.GoodsValidator;
@@ -21,9 +20,6 @@ public class GoodsAdminController {
 
     @Autowired
     GoodsService goodsService;
-
-    @Autowired
-    ImageErrorsUtil imageErrorsUtil;
 
     @GetMapping("/unavailable")
     public String unavailableGoods(Model model){
@@ -40,7 +36,8 @@ public class GoodsAdminController {
     @PostMapping
     public String addNewGoods(@ModelAttribute("goodsValidator") @Valid GoodsValidator goodsValidator,
                               BindingResult bindingResult) throws IOException {
-        imageErrorsUtil.addErrorsIfExist(goodsValidator.getImageToUpload(),bindingResult,"goodsValidator");
+
+        ImageErrorsUtil.addErrorsIfExist(goodsValidator.getImageToUpload(),bindingResult,"goodsValidator");
 
         if(bindingResult.hasErrors())
             return "admin/goods/new";
@@ -75,7 +72,7 @@ public class GoodsAdminController {
         model.addAttribute("from", url);
 
         if(!goodsValidator.getImageToUpload().isEmpty())
-            imageErrorsUtil.addErrorsIfExist(goodsValidator.getImageToUpload(),bindingResult,"goodsValidator");
+            ImageErrorsUtil.addErrorsIfExist(goodsValidator.getImageToUpload(),bindingResult,"goodsValidator");
 
         if(bindingResult.hasErrors())
             return "admin/goods/edit";

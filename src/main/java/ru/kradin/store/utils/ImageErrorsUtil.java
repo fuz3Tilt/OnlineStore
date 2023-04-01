@@ -1,14 +1,12 @@
 package ru.kradin.store.utils;
 
-import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
-@Component
 public class ImageErrorsUtil {
 
-    public void addErrorsIfExist(MultipartFile imageToUpload, BindingResult bindingResult, String objectName){
+    public static void addErrorsIfExist(MultipartFile imageToUpload, BindingResult bindingResult, String objectName){
         if (imageToUpload.getSize() > 5000000){
             FieldError error = new FieldError(objectName, "imageToUpload", "Размер файла не должен превышать 5MB");
             bindingResult.addError(error);
