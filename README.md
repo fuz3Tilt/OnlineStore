@@ -13,3 +13,5 @@ CRUD приложение для "общажного магазина" с кат
 - PostgreSQL
 - Maven
 - Junit
+## Схема базы данных
+![Схема базы данных](https://user-images.githubusercontent.com/113349741/229635930-b63b8021-58bc-46ac-86cb-859ed1dccb13.png)
