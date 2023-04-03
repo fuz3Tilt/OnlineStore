@@ -9,7 +9,7 @@ import ru.kradin.store.models.User;
 
 public interface UserService {
 
-    public void setEmail(User user, String email);
+    public void updateEmail(User user, String email);
 
     public void sendVerificationEmail(User user) throws UserDoesNotHaveEmailException, EmailAlreadyVerifiedException, UserVerificationTokenAlreadyExistException;
 
@@ -17,7 +17,7 @@ public interface UserService {
 
     public void sendPasswordResetEmail(String email);
 
-    public void verifyPasswordReset(String token);
+    public void resetPasswordWithToken(String token, String password) throws UserVerificationTokenNotFoundException;
 
     public User getUserByUsername(String username) throws UsernameNotFoundException;
 }

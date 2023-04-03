@@ -16,7 +16,7 @@ import ru.kradin.store.models.User;
 import ru.kradin.store.services.interfaces.UserService;
 
 @Controller
-@RequestMapping("/email")
+@RequestMapping("/store/email")
 public class EmailController {
 
     @Autowired
@@ -45,7 +45,7 @@ public class EmailController {
     public String setEmail(@RequestParam("email") String email,Authentication authentication){
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User currentUser = userService.getUserByUsername(userDetails.getUsername());
-        userService.setEmail(currentUser,email);
+        userService.updateEmail(currentUser,email);
         return "redirect:/store/admin/info";
     }
 }

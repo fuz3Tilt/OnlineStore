@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Добавить email</title>
+    <title>Сброс пароля</title>
     <style>
         body {
             display: flex;
@@ -34,10 +34,10 @@
     </style>
 </head>
 <body>
-<form th:action="@{/store/email}" th:method="POST">
-    <label for="email">Email:</label>
+<form th:action="@{/store/password/reset/request}" th:method="POST">
+    <label for="email">Введите email чтобы сбросить пароль:</label>
     <input type="email" id="email" name="email" required>
-    <input type="submit" value="Добавить">
+    <input type="submit" value="Сбросить">
 </form>
 </body>
 </html>

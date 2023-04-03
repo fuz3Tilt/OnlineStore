@@ -3,6 +3,7 @@ package ru.kradin.store.services.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kradin.store.enums.TokenPurpose;
 import ru.kradin.store.exceptions.EmailAlreadyVerifiedException;
@@ -24,6 +25,9 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
     UserVerificationTokenRepository userVerificationTokenRepository;
 
     @Autowired
@@ -34,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("isAuthenticated()")
-    public void setEmail(User user, String email) {
+    public void updateEmail(User user, String email) {
         user.setEmail(email);
         user.setEmailVerified(false);
         userRepository.save(user);
@@ -56,11 +60,11 @@ public class UserServiceImpl implements UserService {
             throw new UserVerificationTokenAlreadyExistException();
 
         String token = generateVerificationToken(user,TokenPurpose.EMAIL_CONFIRMATION,5);
-        String confirmationUrl = "http://localhost:8080/email/verify?token=" + token;
+        String confirmationUrl = "http://localhost:8080/store/email/verify?token=" + token;
 
         String email = user.getEmail();
         String subject = "Подтвердите почту";
-        String text = "Пожалуйста, перейдите по ссылке, чтобы подтвердить почту: "+confirmationUrl;
+        String text = "Пожалуйста, перейдите по ссылке чтобы подтвердить почту: "+confirmationUrl;
 
         emailService.sendSimpleMessage(email,subject,text);
     }
@@ -82,12 +86,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendPasswordResetEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if(userOptional.isEmpty())
+            return;
 
+        User user = userOptional.get();
+
+        Optional<UserVerificationToken> userVerificationToken
+                = userVerificationTokenRepository.findByUserAndTokenPurpose(user,TokenPurpose.PASSWORD_RESET);
+
+        if(userVerificationToken.isPresent())
+            return;
+
+        String token = generateVerificationToken(user,TokenPurpose.PASSWORD_RESET,5);
+        String passwordResetUrl = "http://localhost:8080/store/password/reset?token=" + token;
+
+        String subject = "Сброс пароля";
+        String text = "Перейдите по ссылке чтобы сбросить пароль: "+passwordResetUrl;
+
+        emailService.sendSimpleMessage(email,subject,text);
     }
 
-    @Override
-    public void verifyPasswordReset(String token) {
+    @Override ///////////
+    public void resetPasswordWithToken(String token, String password) throws UserVerificationTokenNotFoundException {
+        Optional<UserVerificationToken> userVerificationToken =
+                userVerificationTokenRepository.findByTokenAndTokenPurpose(token,TokenPurpose.PASSWORD_RESET);
 
+        if (userVerificationToken.isEmpty())
+            throw new UserVerificationTokenNotFoundException();
+
+        User user = userVerificationToken.get().getUser();
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 
     @Override

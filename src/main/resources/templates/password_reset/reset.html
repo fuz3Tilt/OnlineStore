@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Вход для администратора</title>
-    <style>
+  <title>Сброс пароля</title>
+  <style>
         body {
             display: flex;
             justify-content: center;
@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
         }
-        form {
+        .form-container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -50,22 +50,29 @@
     </style>
 </head>
 <body>
-<form th:action="@{/store/admin/login}" th:method="POST" enctype="multipart/form-data">
-    <div style="color: black; text-align: center;">Вход в панель администратора.</div>
-    <div th:if="${param.error}">
-        <div style="color: red; text-align: center;">Неверный логин или пароль.</div>
+<div class="form-container">
+  <form th:action="@{/store/password/reset}" th:method="PATCH" enctype="multipart/form-data">
+    <div style="color: black; text-align: center;">Придумайте новый пароль.</div>
+    <div th:if="${param.errorNotEqual}">
+      <div style="color: red; text-align: center;">Пароли не совпадают.</div>
     </div>
-    <div th:if="${param.logout}">
-        <div style="color: green; text-align: center;">Вы вышли из панели администратора.</div>
+    <div th:if="${param.errorIsNull}">
+      <div style="color: red; text-align: center;">Новый пароль не может быть пустым.</div>
     </div>
-    <div th:if="${param.resetRequest}">
-        <div style="color: green; text-align: center;">Запрос на сброс пароля отправлен.</div>
+    <div th:if="${param.errorSmallLength}">
+      <div style="color: red; text-align: center;">Длина пароля должна быть больше 4.</div>
     </div>
-    <div><label> Логин: <input type="text" name="username"/> </label></div>
-    <div><label> Пароль: <input type="password" name="password"/> </label></div>
-    <a href="/store/password/reset/request">Забыли пароль?</a>
-    <br/>
-    <div><input type="submit" value="Войти"/></div>
-</form>
+    <div>
+      <label> Новый пароль: <input type="password" name="password1"/> </label>
+    </div>
+    <div>
+      <label> Повторите пароль: <input type="password" name="password2"/> </label>
+    </div>
+    <input type="hidden" name="token" th:value="${token}"/>
+    <div style="text-align: center;">
+      <input type="submit" value="Изменить"/>
+    </div>
+  </form>
+</div>
 </body>
 </html>
