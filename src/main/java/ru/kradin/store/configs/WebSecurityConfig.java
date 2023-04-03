@@ -19,6 +19,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/store/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/email","/email/new","/email/send-confirm").authenticated()
                         .anyRequest().permitAll()
                 )
                 .formLogin((form) -> form

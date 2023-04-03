@@ -25,7 +25,6 @@ public class AdminControlServiceImpl implements AdminControlService {
     @Autowired
     UserRepository userRepository;
 
-
     @Override
     @Transactional
     public void checkAdminAccount() {
@@ -33,6 +32,7 @@ public class AdminControlServiceImpl implements AdminControlService {
         if(user.isEmpty()){
             User admin = new User();
             admin.setUsername("admin");
+            admin.setEmailVerified(false);
             admin.setPassword(passwordEncoder.encode("admin"));
             admin.setRole(Role.ROLE_ADMIN);
             userRepository.save(admin);
