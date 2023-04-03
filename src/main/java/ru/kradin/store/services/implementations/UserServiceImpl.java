@@ -92,6 +92,9 @@ public class UserServiceImpl implements UserService {
 
         User user = userOptional.get();
 
+        if(!user.isEmailVerified())
+            return;
+
         Optional<UserVerificationToken> userVerificationToken
                 = userVerificationTokenRepository.findByUserAndTokenPurpose(user,TokenPurpose.PASSWORD_RESET);
 
@@ -107,7 +110,7 @@ public class UserServiceImpl implements UserService {
         emailService.sendSimpleMessage(email,subject,text);
     }
 
-    @Override ///////////
+    @Override
     public void resetPasswordWithToken(String token, String password) throws UserVerificationTokenNotFoundException {
         Optional<UserVerificationToken> userVerificationToken =
                 userVerificationTokenRepository.findByTokenAndTokenPurpose(token,TokenPurpose.PASSWORD_RESET);
