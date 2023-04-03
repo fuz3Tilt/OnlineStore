@@ -17,4 +17,7 @@ CRUD приложение для "общажного магазина" с кат
 ![Схема базы данных](https://user-images.githubusercontent.com/113349741/229635930-b63b8021-58bc-46ac-86cb-859ed1dccb13.png)
 ## Как запустить
 1. Введите актуальные значения для вашей базы данных в `application.properties`.
-2. Настройте почту в соответстви с [](https://yandex.ru/support/mail/mail-clients/others.html)
+2. [Настройте почту](https://yandex.ru/support/mail/mail-clients/others.html), введите логин и пароль в `application.properties`.
+3. Выполните `./mvnw clean install` в папке проекта.
+4. Выполните `./mvnw spring-boot:run`.
+5. Приложение запустится по адресу [localhost:8080](http://localhost:8080).
