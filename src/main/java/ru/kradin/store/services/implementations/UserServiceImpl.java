@@ -1,5 +1,7 @@
 package ru.kradin.store.services.implementations;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +26,8 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     PasswordEncoder passwordEncoder;
 
@@ -42,6 +46,15 @@ public class UserServiceImpl implements UserService {
         user.setEmail(email);
         user.setEmailVerified(false);
         userRepository.save(user);
+        log.info("{} email updated.", user.getUsername());
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public void updatePassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+        log.info("{} password updated.", user.getUsername());
     }
 
     @Override
@@ -67,6 +80,7 @@ public class UserServiceImpl implements UserService {
         String text = "Пожалуйста, перейдите по ссылке чтобы подтвердить почту: "+confirmationUrl;
 
         emailService.sendSimpleMessage(email,subject,text);
+        log.info("Verification email sent for {} .", user.getUsername());
     }
 
     @Override
@@ -82,6 +96,7 @@ public class UserServiceImpl implements UserService {
         user.setEmailVerified(true);
         userRepository.save(user);
         userVerificationTokenRepository.delete(userVerificationToken);
+        log.info("{} email verified.", user.getUsername());
     }
 
     @Override
@@ -108,6 +123,7 @@ public class UserServiceImpl implements UserService {
         String text = "Перейдите по ссылке чтобы сбросить пароль: "+passwordResetUrl;
 
         emailService.sendSimpleMessage(email,subject,text);
+        log.info("Password reset email sent for {} .", user.getUsername());
     }
 
     @Override
@@ -121,6 +137,7 @@ public class UserServiceImpl implements UserService {
         User user = userVerificationToken.get().getUser();
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
+        log.info("{} password updated.", user.getUsername());
     }
 
     @Override

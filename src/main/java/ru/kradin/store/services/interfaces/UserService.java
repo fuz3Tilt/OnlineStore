@@ -11,6 +11,8 @@ public interface UserService {
 
     public void updateEmail(User user, String email);
 
+    public void updatePassword(User user, String password);
+
     public void sendVerificationEmail(User user) throws UserDoesNotHaveEmailException, EmailAlreadyVerifiedException, UserVerificationTokenAlreadyExistException;
 
     public void verifyEmail(String token) throws UserVerificationTokenNotFoundException;

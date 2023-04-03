@@ -5,9 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.kradin.store.exceptions.NameAlreadyUseException;
 import ru.kradin.store.enums.Status;
+import ru.kradin.store.exceptions.NameAlreadyUseException;
 import ru.kradin.store.models.Catalog;
 import ru.kradin.store.models.Goods;
 import ru.kradin.store.repositories.CatalogRepository;
@@ -81,7 +80,6 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void saveGoods(GoodsValidator goodsValidator) throws IOException, RuntimeException, NameAlreadyUseException {
         Catalog catalog = catalogRepository.findById(goodsValidator.getCatalogId()).orElse(null);
@@ -146,7 +144,6 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteGoodsById(int id) throws IOException, RuntimeException {
         Goods goods = goodsRepository.findById(id).orElse(null);

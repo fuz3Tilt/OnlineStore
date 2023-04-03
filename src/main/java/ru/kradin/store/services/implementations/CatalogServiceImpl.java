@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.kradin.store.exceptions.NameAlreadyUseException;
 import ru.kradin.store.models.Catalog;
 import ru.kradin.store.models.Goods;
@@ -51,7 +50,6 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void saveCatalog(CatalogValidator catalogValidator) throws IOException, RuntimeException, NameAlreadyUseException {
 
@@ -104,7 +102,6 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteCatalogById(int id) throws IOException, RuntimeException {
         Catalog catalog = catalogRepository.findById(id).orElse(null);

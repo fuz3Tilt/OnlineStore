@@ -76,8 +76,10 @@ public class AdminController {
         if (password1.length() < 4) {
             return "redirect:/store/admin/update/password?errorSmallLength";
         }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User currentUser = userService.getUserByUsername(userDetails.getUsername());
 
-        adminControlService.updatePassword(password1);
+        userService.updatePassword(currentUser,password1);
 
         SecurityContextHolder.clearContext();
         new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
