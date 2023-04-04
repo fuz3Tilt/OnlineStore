@@ -13,7 +13,7 @@ public class UserVerificationTokenServiceImpl {
     @Autowired
     private UserVerificationTokenRepository tokenRepository;
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 1000*60*60*12, initialDelay = 1000)
     public void removeExpiredTokens() {
         tokenRepository.deleteByExpiryDateLessThan(LocalDateTime.now());
     }

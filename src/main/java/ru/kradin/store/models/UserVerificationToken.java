@@ -13,7 +13,7 @@ public class UserVerificationToken {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @Column(name = "token", nullable = false)
+    @Column(name = "token", nullable = false, unique = true)
     private String token;
     @Enumerated(EnumType.STRING)
     @Column(name = "token_purpose", nullable = false)

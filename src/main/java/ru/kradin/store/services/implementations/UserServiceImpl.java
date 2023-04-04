@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
             throw new UserDoesNotHaveEmailException();
 
         Optional<UserVerificationToken> userVerificationToken
-                = userVerificationTokenRepository.findByUserAndTokenPurpose(user,TokenPurpose.EMAIL_CONFIRMATION);
+                = userVerificationTokenRepository.findByUserAndTokenPurposeAndExpiryDateGreaterThan(user,TokenPurpose.EMAIL_CONFIRMATION,LocalDateTime.now());
 
         if(userVerificationToken.isPresent())
             throw new UserVerificationTokenAlreadyExistException();
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void verifyEmail(String token) throws UserVerificationTokenNotFoundException {
         Optional<UserVerificationToken> userVerificationTokenOptional
-                = userVerificationTokenRepository.findByTokenAndTokenPurpose(token,TokenPurpose.EMAIL_CONFIRMATION);
+                = userVerificationTokenRepository.findByTokenAndTokenPurposeAndExpiryDateGreaterThan(token,TokenPurpose.EMAIL_CONFIRMATION, LocalDateTime.now());
         if (userVerificationTokenOptional.isEmpty())
             throw new UserVerificationTokenNotFoundException();
 
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
             return;
 
         Optional<UserVerificationToken> userVerificationToken
-                = userVerificationTokenRepository.findByUserAndTokenPurpose(user,TokenPurpose.PASSWORD_RESET);
+                = userVerificationTokenRepository.findByUserAndTokenPurposeAndExpiryDateGreaterThan(user,TokenPurpose.PASSWORD_RESET,LocalDateTime.now());
 
         if(userVerificationToken.isPresent())
             return;
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void resetPasswordWithToken(String token, String password) throws UserVerificationTokenNotFoundException {
         Optional<UserVerificationToken> userVerificationToken =
-                userVerificationTokenRepository.findByTokenAndTokenPurpose(token,TokenPurpose.PASSWORD_RESET);
+                userVerificationTokenRepository.findByTokenAndTokenPurposeAndExpiryDateGreaterThan(token,TokenPurpose.PASSWORD_RESET,LocalDateTime.now());
 
         if (userVerificationToken.isEmpty())
             throw new UserVerificationTokenNotFoundException();
@@ -137,6 +137,7 @@ public class UserServiceImpl implements UserService {
         User user = userVerificationToken.get().getUser();
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
+	userVerificationTokenRepository.delete(userVerificationToken.get());
         log.info("{} password updated.", user.getUsername());
     }
 
