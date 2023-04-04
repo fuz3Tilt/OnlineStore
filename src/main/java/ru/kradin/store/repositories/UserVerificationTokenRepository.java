@@ -13,7 +13,6 @@ import java.util.Optional;
 
 public interface UserVerificationTokenRepository extends JpaRepository<UserVerificationToken, Long> {
     Optional<UserVerificationToken> findByTokenAndTokenPurposeAndExpiryDateGreaterThan(String token, TokenPurpose tokenPurpose, LocalDateTime now);
-//    Optional<UserVerificationToken> findByTokenAndTokenPurpose(String token, TokenPurpose tokenPurpose);
 
 
     @Transactional
@@ -22,5 +21,4 @@ public interface UserVerificationTokenRepository extends JpaRepository<UserVerif
     void deleteByExpiryDateLessThan(LocalDateTime now);
 
     Optional<UserVerificationToken> findByUserAndTokenPurposeAndExpiryDateGreaterThan(User user, TokenPurpose tokenPurpose, LocalDateTime now);
-//    Optional<UserVerificationToken> findByUserAndTokenPurpose(User user, TokenPurpose tokenPurpose);
 }
