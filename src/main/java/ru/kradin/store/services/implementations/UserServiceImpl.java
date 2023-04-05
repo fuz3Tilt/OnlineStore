@@ -3,7 +3,10 @@ package ru.kradin.store.services.implementations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import ru.kradin.store.repositories.UserRepository;
 import ru.kradin.store.repositories.UserVerificationTokenRepository;
 import ru.kradin.store.services.interfaces.EmailService;
 import ru.kradin.store.services.interfaces.UserService;
+import ru.kradin.store.validators.EmailInfo;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -40,9 +44,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     EmailService emailService;
 
+    @Value("${store.host}")
+    String host;
+
     @Override
     @PreAuthorize("isAuthenticated()")
-    public void updateEmail(User user, String email) {
+    public void updateEmail(Authentication authentication, String email) {
+        User user = getUserByAuthentication(authentication);
+
         user.setEmail(email);
         user.setEmailVerified(false);
         userRepository.save(user);
@@ -50,8 +59,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public EmailInfo getEmailInfo(Authentication authentication) {
+        User user = getUserByAuthentication(authentication);
+
+        return new EmailInfo(user.getEmail(),user.isEmailVerified());
+    }
+
+    @Override
     @PreAuthorize("isAuthenticated()")
-    public void updatePassword(User user, String password) {
+    public void updatePassword(Authentication authentication, String password) {
+        User user = getUserByAuthentication(authentication);
+
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
         log.info("{} password updated.", user.getUsername());
@@ -59,7 +77,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("isAuthenticated()")
-    public void sendVerificationEmail(User user) throws UserDoesNotHaveEmailException, EmailAlreadyVerifiedException, UserVerificationTokenAlreadyExistException {
+    public void sendVerificationEmail(Authentication authentication) throws UserDoesNotHaveEmailException, EmailAlreadyVerifiedException, UserVerificationTokenAlreadyExistException {
+        User user = getUserByAuthentication(authentication);
+
         if (user.isEmailVerified())
             throw new EmailAlreadyVerifiedException();
 
@@ -73,7 +93,7 @@ public class UserServiceImpl implements UserService {
             throw new UserVerificationTokenAlreadyExistException();
 
         String token = generateVerificationToken(user,TokenPurpose.EMAIL_CONFIRMATION,5);
-        String confirmationUrl = "http://localhost:8080/store/email/verify?token=" + token;
+        String confirmationUrl = host + "store/email/verify?token=" + token;
 
         String email = user.getEmail();
         String subject = "Подтвердите почту";
@@ -117,7 +137,7 @@ public class UserServiceImpl implements UserService {
             return;
 
         String token = generateVerificationToken(user,TokenPurpose.PASSWORD_RESET,5);
-        String passwordResetUrl = "http://localhost:8080/store/password/reset?token=" + token;
+        String passwordResetUrl = host + "store/password/reset?token=" + token;
 
         String subject = "Сброс пароля";
         String text = "Перейдите по ссылке чтобы сбросить пароль: "+passwordResetUrl;
@@ -137,13 +157,14 @@ public class UserServiceImpl implements UserService {
         User user = userVerificationToken.get().getUser();
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
-	userVerificationTokenRepository.delete(userVerificationToken.get());
+	    userVerificationTokenRepository.delete(userVerificationToken.get());
         log.info("{} password updated.", user.getUsername());
     }
 
-    @Override
-    @PreAuthorize("isAuthenticated()")
-    public User getUserByUsername(String username) throws UsernameNotFoundException{
+    private User getUserByAuthentication(Authentication authentication) throws UsernameNotFoundException{
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+
         Optional<User> user = userRepository.findByUsername(username);
 
         if(user.isEmpty())

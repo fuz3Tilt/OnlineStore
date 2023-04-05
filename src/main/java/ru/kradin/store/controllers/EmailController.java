@@ -2,7 +2,6 @@ package ru.kradin.store.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +11,6 @@ import ru.kradin.store.exceptions.EmailAlreadyVerifiedException;
 import ru.kradin.store.exceptions.UserDoesNotHaveEmailException;
 import ru.kradin.store.exceptions.UserVerificationTokenAlreadyExistException;
 import ru.kradin.store.exceptions.UserVerificationTokenNotFoundException;
-import ru.kradin.store.models.User;
 import ru.kradin.store.services.interfaces.UserService;
 
 @Controller
@@ -30,9 +28,7 @@ public class EmailController {
 
     @PostMapping("/send-confirm")
     public String confirm(Authentication authentication) throws EmailAlreadyVerifiedException, UserDoesNotHaveEmailException, UserVerificationTokenAlreadyExistException {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User currentUser = userService.getUserByUsername(userDetails.getUsername());
-        userService.sendVerificationEmail(currentUser);
+        userService.sendVerificationEmail(authentication);
         return "redirect:/store/admin/info?confirm";
     }
 
@@ -43,9 +39,7 @@ public class EmailController {
 
     @PostMapping
     public String setEmail(@RequestParam("email") String email,Authentication authentication){
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User currentUser = userService.getUserByUsername(userDetails.getUsername());
-        userService.updateEmail(currentUser,email);
+        userService.updateEmail(authentication,email);
         return "redirect:/store/admin/info";
     }
 }

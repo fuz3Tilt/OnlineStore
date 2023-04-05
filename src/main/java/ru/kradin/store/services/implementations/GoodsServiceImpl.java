@@ -31,7 +31,6 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private ImagesManagerService imagesManager;
 
-
     @Override
     public List<GoodsValidator> getAvailableCatalogGoodsByCatalogId(int id) {
         List<Goods> goodsList = goodsRepository.findByCatalog_IdAndStatusOrderByNameAsc(id, Status.AVAILABLE);

@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -13,9 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.kradin.store.models.User;
 import ru.kradin.store.services.interfaces.AdminControlService;
 import ru.kradin.store.services.interfaces.UserService;
+import ru.kradin.store.validators.EmailInfo;
 
 @Controller
 @RequestMapping("/store/admin")
@@ -44,11 +43,11 @@ public class AdminController {
 
     @GetMapping("/info")
     public String getInfo(Authentication authentication, Model model) throws UsernameNotFoundException {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User currentUser = userService.getUserByUsername(userDetails.getUsername());
-        if(!(currentUser.getEmail()==null)) {
-            model.addAttribute("email", currentUser.getEmail());
-            model.addAttribute("emailVerified", currentUser.isEmailVerified());
+        EmailInfo emailInfo = userService.getEmailInfo(authentication);
+
+        if(!(emailInfo.getEmail()==null)) {
+            model.addAttribute("email", emailInfo.getEmail());
+            model.addAttribute("emailVerified", emailInfo.isEmailVerified());
         }
         return "admin/info";
     }
@@ -76,10 +75,8 @@ public class AdminController {
         if (password1.length() < 4) {
             return "redirect:/store/admin/update/password?errorSmallLength";
         }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User currentUser = userService.getUserByUsername(userDetails.getUsername());
 
-        userService.updatePassword(currentUser,password1);
+        userService.updatePassword(authentication,password1);
 
         SecurityContextHolder.clearContext();
         new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
