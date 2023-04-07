@@ -15,8 +15,8 @@ import ru.kradin.store.services.interfaces.ImagesManagerService;
 import ru.kradin.store.validators.CatalogValidator;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CatalogServiceImpl implements CatalogService {
@@ -34,10 +34,9 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     public List<CatalogValidator> getAllCatalogs() {
         List<Catalog> catalogList = catalogRepository.findByOrderByNameAsc();
-        List<CatalogValidator> catalogValidatorList = new ArrayList<>();
-        for(Catalog catalog:catalogList)
-            catalogValidatorList.add(catalogToCatalogValidator(catalog));
-        return catalogValidatorList;
+        return catalogList.stream()
+                .map(catalog -> catalogToCatalogValidator(catalog))
+                .collect(Collectors.toList());
     }
 
     @Override

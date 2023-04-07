@@ -16,8 +16,8 @@ import ru.kradin.store.services.interfaces.ImagesManagerService;
 import ru.kradin.store.validators.GoodsValidator;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -34,30 +34,21 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public List<GoodsValidator> getAvailableCatalogGoodsByCatalogId(int id) {
         List<Goods> goodsList = goodsRepository.findByCatalog_IdAndStatusOrderByNameAsc(id, Status.AVAILABLE);
-        List<GoodsValidator> goodsValidatorList= new ArrayList<>();
-        for(Goods goods:goodsList)
-            goodsValidatorList.add(goodsToGoodsValidator(goods));
-        return goodsValidatorList;
+        return goodsList.stream().map(goods->goodsToGoodsValidator(goods)).collect(Collectors.toList());
     }
 
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<GoodsValidator> getAllCatalogGoodsByCatalogId(int id) {
         List<Goods> goodsList = goodsRepository.findByCatalog_IdOrderByNameAsc(id);
-        List<GoodsValidator> goodsValidatorList= new ArrayList<>();
-        for(Goods goods:goodsList)
-            goodsValidatorList.add(goodsToGoodsValidator(goods));
-        return goodsValidatorList;
+        return goodsList.stream().map(goods->goodsToGoodsValidator(goods)).collect(Collectors.toList());
     }
 
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<GoodsValidator> getAllUnavailableGoods() {
         List<Goods> goodsList = goodsRepository.findByStatusOrderByNameAsc(Status.UNAVAILABLE);
-        List<GoodsValidator> goodsValidatorList= new ArrayList<>();
-        for(Goods goods:goodsList)
-            goodsValidatorList.add(goodsToGoodsValidator(goods));
-        return goodsValidatorList;
+        return goodsList.stream().map(goods->goodsToGoodsValidator(goods)).collect(Collectors.toList());
     }
 
     @Override
