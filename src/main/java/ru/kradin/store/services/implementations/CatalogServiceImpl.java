@@ -1,5 +1,6 @@
 package ru.kradin.store.services.implementations;
 
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import ru.kradin.store.exceptions.NameAlreadyUseException;
 import ru.kradin.store.models.Catalog;
 import ru.kradin.store.models.Goods;
 import ru.kradin.store.repositories.CatalogRepository;
-import ru.kradin.store.repositories.GoodsRepository;
 import ru.kradin.store.services.interfaces.CatalogService;
 import ru.kradin.store.services.interfaces.ImagesManagerService;
 import ru.kradin.store.validators.CatalogValidator;
@@ -28,8 +28,6 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Autowired
     private ImagesManagerService imagesManager;
-    @Autowired
-    private GoodsRepository goodsRepository;
 
     @Override
     public List<CatalogValidator> getAllCatalogs() {
@@ -101,6 +99,7 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
+    @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteCatalogById(int id) throws IOException, RuntimeException {
         Catalog catalog = catalogRepository.findById(id).orElse(null);
@@ -108,7 +107,7 @@ public class CatalogServiceImpl implements CatalogService {
             throw new RuntimeException("Could not find the catalog to delete.");
 
         try {
-            List<Goods> catalogGoodsList = goodsRepository.findByCatalog_IdOrderByNameAsc(catalog.getId());
+            List<Goods> catalogGoodsList = catalog.getGoodsList();
             for(Goods goods:catalogGoodsList){
                 imagesManager.delete(goods.getImageName());
             }
