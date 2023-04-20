@@ -11,6 +11,7 @@ CRUD приложение для "общажного магазина" с кат
 - Spring Boot
 - Spring Security
 - Spring Data JPA
+- Spring Email
 - Hibernate
 - PostgreSQL
 - Maven
