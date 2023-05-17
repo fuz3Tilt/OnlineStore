@@ -2,6 +2,7 @@ target/
 images/
 images-test/
 .mvn/
+.jpb
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
