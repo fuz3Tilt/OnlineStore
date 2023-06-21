@@ -1,7 +1,8 @@
 package ru.kradin.store.enums;
 
 public enum Role {
-    ROLE_ADMIN("ROLE_ADMIN");
+    ROLE_ADMIN("Администратор"),
+    ROLE_USER("Пользователь");
 
     private final String role;
 

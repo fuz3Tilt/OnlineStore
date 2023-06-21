@@ -1,32 +1,41 @@
 package ru.kradin.store.models;
 
 import jakarta.persistence.*;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import ru.kradin.store.enums.Role;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usr")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
-    @Column(unique = true)
-    private String email;
-    @Column(name = "email_verified")
-    private boolean emailVerified = false;
+public class User extends AbstractPersistable<Long> {
     @Column(unique = true, nullable = false)
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(unique = true, nullable = false)
+    private String email;
+    @Column(name = "email_verified")
+    private boolean emailVerified;
+    @Column(name = "account_non_locked", nullable = false)
+    private boolean accountNonLocked;
+    @Column(nullable = false)
+    private boolean enabled;
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdAt;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public User(String username, String password, String email, boolean emailVerified, boolean accountNonLocked, boolean enabled, LocalDateTime createdAt, Role role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.emailVerified = emailVerified;
+        this.accountNonLocked = accountNonLocked;
+        this.enabled = enabled;
+        this.createdAt = createdAt;
+        this.role = role;
     }
 
     public String getUsername() {
@@ -45,14 +54,6 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -67,5 +68,37 @@ public class User {
 
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
+    }
+
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

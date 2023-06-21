@@ -1,38 +1,30 @@
 package ru.kradin.store.models;
 
 import jakarta.persistence.*;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
-public class Catalog {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int id;
+public class Catalog extends AbstractPersistable<Long> {
     @Column(name = "name",nullable = false,unique = true, length = 50)
     private String name;
     @Column(name = "image_name",nullable = false)
     private String imageName;
     @OneToMany(mappedBy = "catalog", cascade = CascadeType.MERGE, orphanRemoval = true)
-    private List<Goods> goodsList;
+    private List<Good> goodList;
 
-    public Catalog() {
-    }
-    //constructor for tests
-    public Catalog(String name) {
+    public Catalog(String name, String imageName) {
         this.name = name;
-        imageName = "";
-        goodsList = new ArrayList<>();
+        this.imageName = imageName;
     }
 
-    public int getId() {
-        return id;
+    public Long getId() {
+        return super.getId();
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(Long id) {
+        super.setId(id);
     }
 
     public String getName() {
@@ -51,23 +43,11 @@ public class Catalog {
         this.imageName = imageName;
     }
 
-    public List<Goods> getGoodsList() {
-        return goodsList;
+    public List<Good> getGoodsList() {
+        return goodList;
     }
 
-    public void setGoodsList(List<Goods> goodsList) {
-        this.goodsList = goodsList;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Catalog catalog)) return false;
-        return getId() == catalog.getId() && getName().equals(catalog.getName()) && getImageName().equals(catalog.getImageName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName(), getImageName());
+    public void setGoodsList(List<Good> goodList) {
+        this.goodList = goodList;
     }
 }

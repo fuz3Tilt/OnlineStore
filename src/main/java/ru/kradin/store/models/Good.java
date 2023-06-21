@@ -1,15 +1,11 @@
 package ru.kradin.store.models;
 
 import jakarta.persistence.*;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import ru.kradin.store.enums.Status;
 
-import java.util.Objects;
-
 @Entity
-public class Goods {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int id;
+public class Good extends AbstractPersistable<Long> {
     @Column(name = "name",nullable = false,unique = true,length = 50)
     private String name;
     @Column(name = "description",nullable = false,length = 500)
@@ -25,24 +21,21 @@ public class Goods {
     @JoinColumn(name = "catalog_id", nullable = false)
     private Catalog catalog;
 
-    public Goods() {
-    }
-    //constructor for tests
-    public Goods(String name, Catalog catalog) {
+    public Good(String name, String description, String imageName, Status status, long price, Catalog catalog) {
         this.name = name;
-        description = "";
-        imageName = "";
-        status = Status.AVAILABLE;
-        price = 0;
+        this.description = description;
+        this.imageName = imageName;
+        this.status = status;
+        this.price = price;
         this.catalog = catalog;
     }
 
-    public int getId() {
-        return id;
+    public Long getId() {
+        return super.getId();
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(Long id) {
+        super.setId(id);
     }
 
     public String getName() {
@@ -91,17 +84,5 @@ public class Goods {
 
     public void setCatalog(Catalog catalog) {
         this.catalog = catalog;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Goods goods)) return false;
-        return getId() == goods.getId() && getPrice() == goods.getPrice() && getName().equals(goods.getName()) && getDescription().equals(goods.getDescription()) && getImageName().equals(goods.getImageName()) && getStatus() == goods.getStatus() && getCatalog().equals(goods.getCatalog());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription(), getImageName(), getStatus(), getPrice(), getCatalog());
     }
 }

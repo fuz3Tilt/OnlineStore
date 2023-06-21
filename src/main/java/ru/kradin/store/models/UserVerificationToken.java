@@ -1,15 +1,13 @@
 package ru.kradin.store.models;
 
 import jakarta.persistence.*;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import ru.kradin.store.enums.TokenPurpose;
 
 import java.time.LocalDateTime;
 
 @Entity
-public class UserVerificationToken {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+public class UserVerificationToken extends AbstractPersistable<Long> {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -21,12 +19,19 @@ public class UserVerificationToken {
     @Column(name = "expiry_date", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime expiryDate;
 
-    public long getId() {
-        return id;
+    public UserVerificationToken(User user, String token, TokenPurpose tokenPurpose, LocalDateTime expiryDate) {
+        this.user = user;
+        this.token = token;
+        this.tokenPurpose = tokenPurpose;
+        this.expiryDate = expiryDate;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public Long getId() {
+        return super.getId();
+    }
+
+    public void setId(Long id) {
+        super.setId(id);
     }
 
     public User getUser() {
