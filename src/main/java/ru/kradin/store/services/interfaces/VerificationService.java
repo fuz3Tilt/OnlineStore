@@ -13,5 +13,5 @@ public interface VerificationService {
 
     public void sendPasswordResetEmail(String email);
 
-    public void resetPasswordWithToken(String password, String token);
+    public void resetPasswordWithToken(String password, String token) throws UserVerificationTokenNotFoundException;
 }

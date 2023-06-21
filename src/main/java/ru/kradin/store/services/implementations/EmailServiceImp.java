@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.kradin.store.services.interfaces.EmailService;
 
 @Service
-public class EmailServiceImpl implements EmailService {
+public class EmailServiceImp implements EmailService {
 
     @Autowired
     private JavaMailSender emailSender;

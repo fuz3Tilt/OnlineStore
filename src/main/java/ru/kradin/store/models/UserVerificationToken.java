@@ -9,15 +9,18 @@ import java.time.LocalDateTime;
 @Entity
 public class UserVerificationToken extends AbstractPersistable<Long> {
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(nullable = false)
     private User user;
-    @Column(name = "token", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String token;
     @Enumerated(EnumType.STRING)
-    @Column(name = "token_purpose", nullable = false)
+    @Column(nullable = false)
     private TokenPurpose tokenPurpose;
-    @Column(name = "expiry_date", nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime expiryDate;
+
+    public UserVerificationToken() {
+    }
 
     public UserVerificationToken(User user, String token, TokenPurpose tokenPurpose, LocalDateTime expiryDate) {
         this.user = user;

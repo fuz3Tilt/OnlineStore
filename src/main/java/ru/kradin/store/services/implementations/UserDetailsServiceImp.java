@@ -7,12 +7,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.kradin.store.models.User;
 import ru.kradin.store.repositories.UserRepository;
-import ru.kradin.store.security.UserDetailsImpl;
+import ru.kradin.store.security.UserDetailsImp;
 
 import java.util.Optional;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImp implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -24,6 +24,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(user.isEmpty())
             throw new UsernameNotFoundException("User not found");
 
-        return new UserDetailsImpl(user.get());
+        return new UserDetailsImp(user.get());
     }
 }

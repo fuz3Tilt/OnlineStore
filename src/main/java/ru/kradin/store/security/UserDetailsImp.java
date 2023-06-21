@@ -8,11 +8,11 @@ import ru.kradin.store.models.User;
 import java.util.Collection;
 import java.util.Collections;
 
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImp implements UserDetails {
 
     private User user;
 
-    public UserDetailsImpl(User user){
+    public UserDetailsImp(User user){
         this.user = user;
     }
 

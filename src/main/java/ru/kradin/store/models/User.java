@@ -7,7 +7,6 @@ import ru.kradin.store.enums.Role;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "usr")
 public class User extends AbstractPersistable<Long> {
     @Column(unique = true, nullable = false)
     private String username;
@@ -15,17 +14,20 @@ public class User extends AbstractPersistable<Long> {
     private String password;
     @Column(unique = true, nullable = false)
     private String email;
-    @Column(name = "email_verified")
+    @Column(nullable = false)
     private boolean emailVerified;
-    @Column(name = "account_non_locked", nullable = false)
+    @Column(nullable = false)
     private boolean accountNonLocked;
     @Column(nullable = false)
     private boolean enabled;
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public User() {
+    }
 
     public User(String username, String password, String email, boolean emailVerified, boolean accountNonLocked, boolean enabled, LocalDateTime createdAt, Role role) {
         this.username = username;

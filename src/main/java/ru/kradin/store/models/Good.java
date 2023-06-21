@@ -6,20 +6,23 @@ import ru.kradin.store.enums.Status;
 
 @Entity
 public class Good extends AbstractPersistable<Long> {
-    @Column(name = "name",nullable = false,unique = true,length = 50)
+    @Column(nullable = false,unique = true,length = 50)
     private String name;
-    @Column(name = "description",nullable = false,length = 500)
+    @Column(nullable = false,length = 500)
     private String description;
-    @Column(name = "image_name",nullable = false)
+    @Column(nullable = false)
     private String imageName;
     @Enumerated(EnumType.STRING)
-    @Column(name = "status",nullable = false)
+    @Column(nullable = false)
     private Status status;
-    @Column(name = "price",nullable = false)
+    @Column(nullable = false)
     private long price;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "catalog_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Catalog catalog;
+
+    public Good() {
+    }
 
     public Good(String name, String description, String imageName, Status status, long price, Catalog catalog) {
         this.name = name;

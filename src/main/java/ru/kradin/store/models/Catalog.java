@@ -7,24 +7,19 @@ import java.util.List;
 
 @Entity
 public class Catalog extends AbstractPersistable<Long> {
-    @Column(name = "name",nullable = false,unique = true, length = 50)
+    @Column(nullable = false, unique = true, length = 50)
     private String name;
-    @Column(name = "image_name",nullable = false)
-    private String imageName;
+    @Column(nullable = false)
+    private String imageUrl;
     @OneToMany(mappedBy = "catalog", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<Good> goodList;
 
-    public Catalog(String name, String imageName) {
+    public Catalog() {
+    }
+
+    public Catalog(String name, String imageUrl) {
         this.name = name;
-        this.imageName = imageName;
-    }
-
-    public Long getId() {
-        return super.getId();
-    }
-
-    public void setId(Long id) {
-        super.setId(id);
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -35,19 +30,19 @@ public class Catalog extends AbstractPersistable<Long> {
         this.name = name;
     }
 
-    public String getImageName() {
-        return imageName;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public List<Good> getGoodsList() {
+    public List<Good> getGoodList() {
         return goodList;
     }
 
-    public void setGoodsList(List<Good> goodList) {
+    public void setGoodList(List<Good> goodList) {
         this.goodList = goodList;
     }
 }
