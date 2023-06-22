@@ -21,7 +21,10 @@ import ru.kradin.store.services.interfaces.AuthenticatedUserService;
 import ru.kradin.store.services.interfaces.EmailService;
 import ru.kradin.store.services.interfaces.VerificationService;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -182,7 +185,7 @@ public class VerificationServiceImp implements VerificationService {
     }
 
     private String generateVerificationToken(User user, TokenPurpose tokenPurpose, int tokenLifetimeInMinutes){
-        String token = UUID.randomUUID().toString();
+        String token = randomToken();
         LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(tokenLifetimeInMinutes);
         UserVerificationToken userVerificationToken = new UserVerificationToken(
                 user,
@@ -192,6 +195,27 @@ public class VerificationServiceImp implements VerificationService {
         );
         userVerificationTokenRepository.save(userVerificationToken);
         return userVerificationToken.getToken();
+    }
+
+    private static String randomToken() {
+        try {
+        int numberOfPieces = 5;
+        StringBuilder tokenBuilder = new StringBuilder();
+        SecureRandom secureRandom;
+            secureRandom = SecureRandom.getInstanceStrong();
+        for (int i = 0; i < numberOfPieces; i++) {
+            byte[] partOfTokenBytes = new byte[12];
+            secureRandom.nextBytes(partOfTokenBytes);
+            String partOfToken = Base64.getEncoder().encodeToString(partOfTokenBytes);
+            tokenBuilder.append(partOfToken);
+            if (i < numberOfPieces-1) {
+                tokenBuilder.append("-");
+            }
+        }
+        return tokenBuilder.toString();
+        } catch (NoSuchAlgorithmException e) {
+            return UUID.randomUUID().toString();
+        }
     }
 
     @Transactional
