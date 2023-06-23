@@ -19,17 +19,20 @@ public class MyScheduling {
 
     private static final int PERIOD = 1000 * 60 * 60 * 24;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserVerificationTokenRepository tokenRepository;
+    private final UserVerificationTokenRepository tokenRepository;
 
     @Value("${spring.mail.username}")
     private String adminEmail;
+
+    public MyScheduling(PasswordEncoder passwordEncoder, UserRepository userRepository, UserVerificationTokenRepository tokenRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+    }
 
     public void createTasks() {
         TimerTask createAdminAccountIfNotExist = getCreateAdminAccountIfNotExist();

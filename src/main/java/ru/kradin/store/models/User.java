@@ -7,6 +7,7 @@ import ru.kradin.store.enums.Role;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name="usr")
 public class User extends AbstractPersistable<Long> {
     @Column(unique = true, nullable = false)
     private String username;
