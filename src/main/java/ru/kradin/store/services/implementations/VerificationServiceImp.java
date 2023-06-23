@@ -76,6 +76,7 @@ public class VerificationServiceImp implements VerificationService {
     public void verifyEmail(String token) throws UserVerificationTokenNotFoundException {
         User user = getUserForVerifyingEmail(token);
         user.setEmailVerified(true);
+        user.setEnabled(true);
         userRepository.save(user);
         log.info("{} email verified.", user.getUsername());
     }
