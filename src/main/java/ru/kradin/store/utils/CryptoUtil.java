@@ -1,6 +1,9 @@
 package ru.kradin.store.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import ru.kradin.store.services.implementations.AdminServiceImp;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -22,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CryptoUtil {
+    private static final Logger log = LoggerFactory.getLogger(CryptoUtil.class);
     private static final String PATH_TO_PROPERTIES = "src/main/resources/application.properties";
     @Value("${security.key}")
     private static String key;
@@ -72,6 +76,7 @@ public class CryptoUtil {
         try {
             secureRandom = SecureRandom.getInstanceStrong();
         } catch (NoSuchAlgorithmException e) {
+            log.error("Cannot initialize SecureRandom.class");
             return;
         }
 
@@ -86,8 +91,10 @@ public class CryptoUtil {
 
         try {
             updateKeyAndShiftAmount(key,shift_amount);
+            log.info("Encryption keys successfully updated.");
         } catch (IOException e) {
-            System.out.println("It's time to cry");
+            log.error("Fatal error. Encryption keys cannot be write into application.properties");
+            throw new RuntimeException("Encryption keys cannot be write into application.properties");
         }
     }
 
