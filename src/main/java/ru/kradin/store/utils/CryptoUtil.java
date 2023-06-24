@@ -22,9 +22,10 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CryptoUtil {
+    private static final String PATH_TO_PROPERTIES = "src/main/resources/application.properties";
     @Value("${security.key}")
     private static String key;
-    @Value("${security.shift_amount}")
+    @Value("${security.shiftAmount}")
     private static int shift_amount;
 
     public static String encrypt(String data) throws Exception {
@@ -97,14 +98,14 @@ public class CryptoUtil {
     }
 
     private static void updateKeyAndShiftAmount(String newKey, int newShiftAmount) throws IOException {
-        Path path = Paths.get("src/main/resources/application.properties");
+        Path path = Paths.get(PATH_TO_PROPERTIES);
         List<String> lines = Files.readAllLines(path);
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             if (line.startsWith("security.key=")) {
                 lines.set(i, "security.key=" + newKey);
-            } else if (line.startsWith("security.shift_amount=")) {
-                lines.set(i, "security.shift_amount=" + newShiftAmount);
+            } else if (line.startsWith("security.shiftAmount=")) {
+                lines.set(i, "security.shiftAmount=" + newShiftAmount);
             }
         }
         Files.write(path, lines);

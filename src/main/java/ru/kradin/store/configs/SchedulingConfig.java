@@ -5,23 +5,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kradin.store.repositories.UserRepository;
 import ru.kradin.store.repositories.UserVerificationTokenRepository;
-import ru.kradin.store.utils.MyScheduling;
+import ru.kradin.store.utils.StoreScheduling;
 
 @Configuration
 public class SchedulingConfig {
 
     @Bean
-    public MyScheduling myScheduling(
+    public StoreScheduling myScheduling(
             PasswordEncoder passwordEncoder,
             UserRepository userRepository,
             UserVerificationTokenRepository userVerificationTokenRepository) {
 
-        MyScheduling myScheduling = new MyScheduling(
+        StoreScheduling storeScheduling = new StoreScheduling(
                 passwordEncoder,
                 userRepository,
                 userVerificationTokenRepository);
 
-        myScheduling.createTasks();
-        return myScheduling;
+        storeScheduling.createTasks();
+        return storeScheduling;
     }
 }

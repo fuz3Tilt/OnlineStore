@@ -4,7 +4,7 @@ import ru.kradin.store.DTOs.UserDTO;
 
 public interface UserService {
 
-    public UserDTO getCurentUserDTO();
+    public UserDTO getCurrentUser();
 
     public void updateEmail(String email);
 

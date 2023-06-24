@@ -3,7 +3,6 @@ package ru.kradin.store.utils;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kradin.store.enums.Role;
@@ -14,8 +13,8 @@ import ru.kradin.store.repositories.UserVerificationTokenRepository;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class MyScheduling {
-    private static final Logger log = LoggerFactory.getLogger(MyScheduling.class);
+public class StoreScheduling {
+    private static final Logger log = LoggerFactory.getLogger(StoreScheduling.class);
 
     private static final int PERIOD = 1000 * 60 * 60 * 24;
 
@@ -28,7 +27,7 @@ public class MyScheduling {
     @Value("${spring.mail.username}")
     private String adminEmail;
 
-    public MyScheduling(PasswordEncoder passwordEncoder, UserRepository userRepository, UserVerificationTokenRepository tokenRepository) {
+    public StoreScheduling(PasswordEncoder passwordEncoder, UserRepository userRepository, UserVerificationTokenRepository tokenRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
@@ -51,6 +50,8 @@ public class MyScheduling {
         if (planedDate.getTime().compareTo(new Date()) < 0) {
             planedDate.add(Calendar.DAY_OF_MONTH, 1);
         }
+
+        CryptoUtil.generateNewKeyAndShiftAmount();
 
         intstantTimer.schedule(createAdminAccountIfNotExist, instantDate.getTime(), PERIOD);
         intstantTimer.schedule(removeExpiredTokens, instantDate.getTime(),PERIOD);

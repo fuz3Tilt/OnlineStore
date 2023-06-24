@@ -10,16 +10,16 @@ public class Catalog extends AbstractPersistable<Long> {
     @Column(nullable = false, unique = true, length = 50)
     private String name;
     @Column(nullable = false)
-    private String imageUrl;
+    private String imageURL;
     @OneToMany(mappedBy = "catalog", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<Good> goodList;
 
     public Catalog() {
     }
 
-    public Catalog(String name, String imageUrl) {
+    public Catalog(String name, String imageURL) {
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.imageURL = imageURL;
     }
 
     public String getName() {
@@ -30,12 +30,12 @@ public class Catalog extends AbstractPersistable<Long> {
         this.name = name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public List<Good> getGoodList() {

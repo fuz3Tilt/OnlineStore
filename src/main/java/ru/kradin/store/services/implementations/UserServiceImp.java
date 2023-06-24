@@ -32,7 +32,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     @PreAuthorize("isAuthenticated()")
-    public UserDTO getCurentUserDTO() {
+    public UserDTO getCurrentUser() {
         User user = authenticatedUserService.getCurentUser();
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         return userDTO;

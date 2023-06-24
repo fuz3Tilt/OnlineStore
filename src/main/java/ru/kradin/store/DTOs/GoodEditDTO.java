@@ -1,12 +1,13 @@
 package ru.kradin.store.DTOs;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.springframework.web.multipart.MultipartFile;
 import ru.kradin.store.enums.Status;
 
-public class GoodDTO extends AbstractPersistable<Long> {
+public class GoodEditDTO extends AbstractPersistable<Long> {
     private String name;
     private String description;
-    private String imageURL;
+    private MultipartFile image;
     private Status status;
     private long price;
     private CatalogDTO catalog;
@@ -31,12 +32,12 @@ public class GoodDTO extends AbstractPersistable<Long> {
         this.description = description;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public MultipartFile getImage() {
+        return image;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImage(MultipartFile image) {
+        this.image = image;
     }
 
     public Status getStatus() {

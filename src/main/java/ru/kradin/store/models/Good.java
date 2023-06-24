@@ -11,7 +11,7 @@ public class Good extends AbstractPersistable<Long> {
     @Column(nullable = false,length = 500)
     private String description;
     @Column(nullable = false)
-    private String imageName;
+    private String imageURL;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
@@ -24,10 +24,10 @@ public class Good extends AbstractPersistable<Long> {
     public Good() {
     }
 
-    public Good(String name, String description, String imageName, Status status, long price, Catalog catalog) {
+    public Good(String name, String description, String imageURL, Status status, long price, Catalog catalog) {
         this.name = name;
         this.description = description;
-        this.imageName = imageName;
+        this.imageURL = imageURL;
         this.status = status;
         this.price = price;
         this.catalog = catalog;
@@ -58,11 +58,11 @@ public class Good extends AbstractPersistable<Long> {
     }
 
     public String getImageName() {
-        return imageName;
+        return imageURL;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setImageName(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public Status getStatus() {
