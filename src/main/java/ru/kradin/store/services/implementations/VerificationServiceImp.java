@@ -47,8 +47,8 @@ public class VerificationServiceImp implements VerificationService {
     @Autowired
     private AuthenticatedUserService authenticatedUserService;
 
-    @Value("${store.email.verifyingURL}")
-    private String emailVerifyUrl;
+    @Value("${store.email.verificationURL}")
+    private String emailVerificationUrl;
 
     @Value("${store.password.resetURL}")
     private String passwordResetUrl;
@@ -65,7 +65,7 @@ public class VerificationServiceImp implements VerificationService {
 
         String token = generateVerificationToken(user,TokenPurpose.EMAIL_CONFIRMATION,60);
 
-        String confirmationUrl = emailVerifyUrl + token;
+        String confirmationUrl = emailVerificationUrl + token;
 
         emailService.sendSimpleMessage(user.getEmail(),EMAIL_VERIFYING_SUBJECT,EMAIL_VERIFYING_TEXT+confirmationUrl);
         log.info("Verification email sent for {} .", user.getUsername());

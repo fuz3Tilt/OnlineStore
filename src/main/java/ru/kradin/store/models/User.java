@@ -21,6 +21,8 @@ public class User extends AbstractPersistable<Long> {
     private boolean accountNonLocked;
     @Column(nullable = false)
     private boolean enabled;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.MERGE)
+    Cart cart;
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
     @Column(nullable = false)
@@ -87,6 +89,14 @@ public class User extends AbstractPersistable<Long> {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     public LocalDateTime getCreatedAt() {

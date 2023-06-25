@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kradin.store.enums.Role;
+import ru.kradin.store.models.Cart;
 import ru.kradin.store.models.User;
+import ru.kradin.store.repositories.CartRepository;
 import ru.kradin.store.repositories.UserRepository;
 import ru.kradin.store.repositories.UserVerificationTokenRepository;
 
@@ -21,15 +23,17 @@ public class StoreScheduling {
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
+    private final CartRepository cartRepository;
 
     private final UserVerificationTokenRepository tokenRepository;
 
     @Value("${spring.mail.username}")
     private String adminEmail;
 
-    public StoreScheduling(PasswordEncoder passwordEncoder, UserRepository userRepository, UserVerificationTokenRepository tokenRepository) {
+    public StoreScheduling(PasswordEncoder passwordEncoder, UserRepository userRepository, CartRepository cartRepository, UserVerificationTokenRepository tokenRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.cartRepository = cartRepository;
         this.tokenRepository = tokenRepository;
     }
 
@@ -74,7 +78,9 @@ public class StoreScheduling {
                             true,
                             LocalDateTime.now(),
                             Role.ROLE_ADMIN);
-                    userRepository.save(admin);
+                    admin = userRepository.save(admin);
+                    Cart cart = new Cart(admin);
+                    cartRepository.save(cart);
                     log.info("Admin account created");
                 }
             }

@@ -9,12 +9,11 @@ public class CatalogDTO extends AbstractPersistable<Long> {
     private String imageURL;
     private List<GoodDTO> goodList;
 
-    public String getName() {
-        return name;
-    }
-
     public void setId(Long id) {
         super.setId(id);
+    }
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {

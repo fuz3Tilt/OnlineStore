@@ -2,7 +2,6 @@ package ru.kradin.store.models;
 
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
-import ru.kradin.store.enums.Status;
 
 @Entity
 public class Good extends AbstractPersistable<Long> {
@@ -12,9 +11,8 @@ public class Good extends AbstractPersistable<Long> {
     private String description;
     @Column(nullable = false)
     private String imageURL;
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status;
+    private Long inStock;
     @Column(nullable = false)
     private long price;
     @ManyToOne(cascade = CascadeType.MERGE)
@@ -24,21 +22,13 @@ public class Good extends AbstractPersistable<Long> {
     public Good() {
     }
 
-    public Good(String name, String description, String imageURL, Status status, long price, Catalog catalog) {
+    public Good(String name, String description, String imageURL, Long inStock, long price, Catalog catalog) {
         this.name = name;
         this.description = description;
         this.imageURL = imageURL;
-        this.status = status;
+        this.inStock = inStock;
         this.price = price;
         this.catalog = catalog;
-    }
-
-    public Long getId() {
-        return super.getId();
-    }
-
-    public void setId(Long id) {
-        super.setId(id);
     }
 
     public String getName() {
@@ -65,12 +55,12 @@ public class Good extends AbstractPersistable<Long> {
         this.imageURL = imageURL;
     }
 
-    public Status getStatus() {
-        return status;
+    public Long getInStock() {
+        return inStock;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setInStock(Long inStock) {
+        this.inStock = inStock;
     }
 
     public long getPrice() {

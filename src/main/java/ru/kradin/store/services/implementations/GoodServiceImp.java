@@ -1,5 +1,6 @@
 package ru.kradin.store.services.implementations;
 
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -54,12 +55,13 @@ public class GoodServiceImp implements GoodService {
     }
 
     @Override
+    @Transactional
     public void create(GoodCreateDTO goodCreateDTO) {
         Good good = new Good(
                 goodCreateDTO.getName(),
                 goodCreateDTO.getDescription(),
                 saveAndGetURL(goodCreateDTO.getImage()),
-                goodCreateDTO.getStatus(),
+                goodCreateDTO.getInStock(),
                 goodCreateDTO.getPrice(),
                 getCatalog(goodCreateDTO.getCatalog())
         );
@@ -68,11 +70,12 @@ public class GoodServiceImp implements GoodService {
     }
 
     @Override
+    @Transactional
     public void update(GoodEditDTO goodEditDTO) {
         Good good = goodRepository.findById(goodEditDTO.getId()).get();
         good.setName(goodEditDTO.getName());
         good.setDescription(goodEditDTO.getDescription());
-        good.setStatus(goodEditDTO.getStatus());
+        good.setInStock(goodEditDTO.getInStock());
         good.setPrice(goodEditDTO.getPrice());
         if (goodEditDTO.getImage() != null && !goodEditDTO.getImage().isEmpty()) {
             deleteImage(good.getImageURL());
@@ -83,6 +86,7 @@ public class GoodServiceImp implements GoodService {
     }
 
     @Override
+    @Transactional
     public void delete(Long goodId) {
         Good good = goodRepository.findById(goodId).get();
         deleteImage(good.getImageURL());

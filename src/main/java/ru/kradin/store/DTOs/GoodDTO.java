@@ -1,13 +1,12 @@
 package ru.kradin.store.DTOs;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
-import ru.kradin.store.enums.Status;
 
 public class GoodDTO extends AbstractPersistable<Long> {
     private String name;
     private String description;
     private String imageURL;
-    private Status status;
+    private Long inStock;
     private long price;
     private CatalogDTO catalog;
 
@@ -39,12 +38,12 @@ public class GoodDTO extends AbstractPersistable<Long> {
         this.imageURL = imageURL;
     }
 
-    public Status getStatus() {
-        return status;
+    public Long getInStock() {
+        return inStock;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setInStock(Long inStock) {
+        this.inStock = inStock;
     }
 
     public long getPrice() {
