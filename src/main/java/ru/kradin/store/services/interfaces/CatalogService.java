@@ -4,11 +4,12 @@ import ru.kradin.store.DTOs.CatalogCreateDTO;
 import ru.kradin.store.DTOs.CatalogDTO;
 import ru.kradin.store.DTOs.CatalogEditDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CatalogService {
-    public List<CatalogDTO> getAllCatalogs();
-    public void createCatalog(CatalogCreateDTO catalogCreateDTO);
-    public void updateCatalog(CatalogEditDTO catalogEditDTO);
-    public void deleteCatalog(Long catalogId);
+    public List<CatalogDTO> getAll();
+    public void create(CatalogCreateDTO catalogCreateDTO);
+    public void update(CatalogEditDTO catalogEditDTO);
+    public void delete(Long catalogId);
 }

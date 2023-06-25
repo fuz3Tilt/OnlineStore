@@ -47,10 +47,10 @@ public class VerificationServiceImp implements VerificationService {
     @Autowired
     private AuthenticatedUserService authenticatedUserService;
 
-    @Value("${store.email.verifyingUrl}")
+    @Value("${store.email.verifyingURL}")
     private String emailVerifyUrl;
 
-    @Value("${store.password.resetUrl}")
+    @Value("${store.password.resetURL}")
     private String passwordResetUrl;
 
     private static final String EMAIL_VERIFYING_SUBJECT = "Подтверждение почты";

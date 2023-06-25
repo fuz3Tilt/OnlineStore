@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kradin.store.services.interfaces.ImageService;
 
@@ -17,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+@Service
 public class ImageServiceImp implements ImageService {
     private static final Logger log = LoggerFactory.getLogger(ImageServiceImp.class);
     @Value("${store.uploadPath}")
@@ -38,12 +40,6 @@ public class ImageServiceImp implements ImageService {
         log.info("Image {} saved.",fileName);
 
         return fileName;
-    }
-
-    @Override
-    public Resource get(String imageName) throws IOException {
-        Path pathToImage = getPathToImage(imageName);
-        return getImageAsResource(pathToImage);
     }
 
     @Override
@@ -92,18 +88,6 @@ public class ImageServiceImp implements ImageService {
             }
         } else {
             throw new IOException("Invalid file path. From delete().");
-        }
-    }
-
-    private Resource getImageAsResource(Path path) throws IOException {
-        if (Files.exists(path)) {
-            try {
-                return new UrlResource(path.toUri());
-            } catch (IOException e) {
-                throw new IOException("Failed to read image.");
-            }
-        } else {
-            throw new IOException("Invalid file path.");
         }
     }
 }

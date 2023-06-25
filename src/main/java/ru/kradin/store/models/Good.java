@@ -57,11 +57,11 @@ public class Good extends AbstractPersistable<Long> {
         this.description = description;
     }
 
-    public String getImageName() {
+    public String getImageURL() {
         return imageURL;
     }
 
-    public void setImageName(String imageURL) {
+    public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
 
