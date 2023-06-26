@@ -8,7 +8,6 @@ public class GoodDTO extends AbstractPersistable<Long> {
     private String imageURL;
     private Long inStock;
     private long price;
-    private CatalogDTO catalog;
 
     public void setId(Long id) {
         super.setId(id);
@@ -52,13 +51,5 @@ public class GoodDTO extends AbstractPersistable<Long> {
 
     public void setPrice(long price) {
         this.price = price;
-    }
-
-    public CatalogDTO getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(CatalogDTO catalog) {
-        this.catalog = catalog;
     }
 }
