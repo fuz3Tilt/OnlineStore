@@ -6,7 +6,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class CartGoodQuantity extends GoodQuantity{
+public class CartGoodQuantity extends GoodQuantity {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(nullable = false)
     private Cart cart;

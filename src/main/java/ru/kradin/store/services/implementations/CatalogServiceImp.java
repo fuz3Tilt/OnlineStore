@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kradin.store.DTOs.CatalogCreateDTO;
@@ -47,6 +48,7 @@ public class CatalogServiceImp implements CatalogService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void create(CatalogCreateDTO catalogCreateDTO) {
         Catalog catalog = new Catalog(
                 catalogCreateDTO.getName(),
@@ -58,6 +60,7 @@ public class CatalogServiceImp implements CatalogService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void update(CatalogEditDTO catalogEditDTO) {
         Catalog catalog = catalogRepository.findById(catalogEditDTO.getId()).get();
         catalog.setName(catalogEditDTO.getName());
@@ -71,6 +74,7 @@ public class CatalogServiceImp implements CatalogService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(Long catalogId) {
         Catalog catalog = catalogRepository.findById(catalogId).get();
         deleteImage(catalog.getImageURL());

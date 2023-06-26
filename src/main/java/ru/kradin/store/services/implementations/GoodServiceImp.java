@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kradin.store.DTOs.CatalogDTO;
@@ -56,6 +57,7 @@ public class GoodServiceImp implements GoodService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void create(GoodCreateDTO goodCreateDTO) {
         Good good = new Good(
                 goodCreateDTO.getName(),
@@ -71,6 +73,7 @@ public class GoodServiceImp implements GoodService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void update(GoodEditDTO goodEditDTO) {
         Good good = goodRepository.findById(goodEditDTO.getId()).get();
         good.setName(goodEditDTO.getName());
@@ -87,6 +90,7 @@ public class GoodServiceImp implements GoodService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(Long goodId) {
         Good good = goodRepository.findById(goodId).get();
         deleteImage(good.getImageURL());
@@ -95,6 +99,7 @@ public class GoodServiceImp implements GoodService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteImagesByCatalogId(Long catalogId) {
         List<Good> goodList = goodRepository.findByCatalog_IdOrderByNameAsc(catalogId);
         goodList.forEach(good -> deleteImage(good.getImageURL()));
