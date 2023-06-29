@@ -13,6 +13,12 @@ public class User extends AbstractPersistable<Long> {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private String lastName;
+    @Column(nullable = false)
+    private String firstName;
+    @Column(nullable = false)
+    private String middleName;
     @Column(unique = true, nullable = false)
     private String email;
     @Column(nullable = false)
@@ -32,9 +38,12 @@ public class User extends AbstractPersistable<Long> {
     public User() {
     }
 
-    public User(String username, String password, String email, boolean emailVerified, boolean accountNonLocked, boolean enabled, LocalDateTime createdAt, Role role) {
+    public User(String username, String password, String lastName, String firstName, String middleName, String email, boolean emailVerified, boolean accountNonLocked, boolean enabled, LocalDateTime createdAt, Role role) {
         this.username = username;
         this.password = password;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.middleName = middleName;
         this.email = email;
         this.emailVerified = emailVerified;
         this.accountNonLocked = accountNonLocked;
@@ -57,6 +66,30 @@ public class User extends AbstractPersistable<Long> {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
     public String getEmail() {

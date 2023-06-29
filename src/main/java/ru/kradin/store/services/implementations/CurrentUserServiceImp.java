@@ -7,17 +7,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.kradin.store.models.User;
 import ru.kradin.store.repositories.UserRepository;
-import ru.kradin.store.services.interfaces.AuthenticatedUserService;
+import ru.kradin.store.services.interfaces.CurrentUserService;
 
 import java.util.Optional;
 
 @Service
-public class AuthenticatedUserServiceImp implements AuthenticatedUserService {
+public class CurrentUserServiceImp implements CurrentUserService {
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public User getCurentUser() {
+    public User get() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();

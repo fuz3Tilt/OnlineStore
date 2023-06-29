@@ -34,6 +34,9 @@ public class RegistrationServiceImp implements RegistrationService {
         User user = new User(
                 registrationDTO.getUsername(),
                 passwordEncoder.encode(registrationDTO.getPassword()),
+                registrationDTO.getLastName(),
+                registrationDTO.getFirstName(),
+                registrationDTO.getMiddleName(),
                 registrationDTO.getEmail(),
                 false,
                 true,

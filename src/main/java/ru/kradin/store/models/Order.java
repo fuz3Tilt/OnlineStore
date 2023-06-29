@@ -23,6 +23,7 @@ public class Order extends AbstractPersistable<Long> {
     private String message;
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<AdditionalPrice> additionalPriceList;
+    private String trackCode;
     @Column(nullable = false)
     private Status status;
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
@@ -33,8 +34,7 @@ public class Order extends AbstractPersistable<Long> {
     public Order() {
     }
 
-    public Order(List<OrderGoodQuantity> goodQuantityList, User user, String address, Integer postalCode, String message, LocalDateTime createdAt) {
-        this.goodQuantityList = goodQuantityList;
+    public Order(User user, String address, Integer postalCode, String message, LocalDateTime createdAt) {
         this.user = user;
         this.address = address;
         this.postalCode = postalCode;
@@ -89,6 +89,14 @@ public class Order extends AbstractPersistable<Long> {
 
     public void setAdditionalPriceList(List<AdditionalPrice> additionalPriceList) {
         this.additionalPriceList = additionalPriceList;
+    }
+
+    public String getTrackCode() {
+        return trackCode;
+    }
+
+    public void setTrackCode(String trackCode) {
+        this.trackCode = trackCode;
     }
 
     public Status getStatus() {

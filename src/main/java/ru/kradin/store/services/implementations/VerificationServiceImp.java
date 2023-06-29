@@ -1,6 +1,5 @@
 package ru.kradin.store.services.implementations;
 
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kradin.store.enums.TokenPurpose;
 import ru.kradin.store.exceptions.EmailAlreadyVerifiedException;
 import ru.kradin.store.exceptions.UserDoesNotHaveEmailException;
@@ -17,9 +17,7 @@ import ru.kradin.store.models.User;
 import ru.kradin.store.models.UserVerificationToken;
 import ru.kradin.store.repositories.UserRepository;
 import ru.kradin.store.repositories.UserVerificationTokenRepository;
-import ru.kradin.store.services.interfaces.AuthenticatedUserService;
-import ru.kradin.store.services.interfaces.EmailService;
-import ru.kradin.store.services.interfaces.VerificationService;
+import ru.kradin.store.services.interfaces.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -29,7 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class VerificationServiceImp implements VerificationService {
+public class VerificationServiceImp implements EmailVerificationService, TokenVerificationService {
     private static final Logger log = LoggerFactory.getLogger(VerificationServiceImp.class);
 
     @Autowired
@@ -45,7 +43,7 @@ public class VerificationServiceImp implements VerificationService {
     private EmailService emailService;
 
     @Autowired
-    private AuthenticatedUserService authenticatedUserService;
+    private CurrentUserService currentUserService;
 
     @Value("${store.email.verificationURL}")
     private String emailVerificationUrl;
@@ -109,7 +107,7 @@ public class VerificationServiceImp implements VerificationService {
     }
 
     private User getUserForSendingVerificationEmail() throws EmailAlreadyVerifiedException, UserDoesNotHaveEmailException, UserVerificationTokenAlreadyExistsException {
-        User user = authenticatedUserService.getCurentUser();
+        User user = currentUserService.get();
 
         if (user.isEmailVerified())
             throw new EmailAlreadyVerifiedException();

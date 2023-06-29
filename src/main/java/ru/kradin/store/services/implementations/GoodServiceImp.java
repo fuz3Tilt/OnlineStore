@@ -1,6 +1,5 @@
 package ru.kradin.store.services.implementations;
 
-import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kradin.store.DTOs.CatalogDTO;
 import ru.kradin.store.DTOs.GoodCreateDTO;
@@ -19,14 +19,14 @@ import ru.kradin.store.models.Catalog;
 import ru.kradin.store.models.Good;
 import ru.kradin.store.repositories.CatalogRepository;
 import ru.kradin.store.repositories.GoodRepository;
-import ru.kradin.store.services.interfaces.GoodService;
+import ru.kradin.store.services.interfaces.AdminGoodService;
 import ru.kradin.store.services.interfaces.ImageService;
 
 import java.io.IOException;
 import java.util.List;
 
 @Service
-public class GoodServiceImp implements GoodService {
+public class GoodServiceImp implements AdminGoodService {
     private static final Logger log = LoggerFactory.getLogger(GoodServiceImp.class);
 
     @Autowired
@@ -96,13 +96,6 @@ public class GoodServiceImp implements GoodService {
         deleteImage(good.getImageURL());
         goodRepository.delete(good);
         log.info("Good {} deleted.",good.getName());
-    }
-
-    @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteImagesByCatalogId(Long catalogId) {
-        List<Good> goodList = goodRepository.findByCatalog_IdOrderByNameAsc(catalogId);
-        goodList.forEach(good -> deleteImage(good.getImageURL()));
     }
 
     private String saveAndGetURL(MultipartFile image) {

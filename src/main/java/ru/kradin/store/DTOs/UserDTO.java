@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 
 public class UserDTO {
     private String username;
+    private String lastName;
+    private String firstName;
+    private String middleName;
     private String email;
     private boolean emailVerified;
     private boolean accountNonLocked;

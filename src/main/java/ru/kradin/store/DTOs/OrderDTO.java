@@ -13,6 +13,7 @@ public class OrderDTO extends AbstractPersistable<Long> {
     private Integer postalCode;
     private String message;
     private List<AdditionalPriceDTO> additionalPriceList;
+    private String trackCode;
     private Status status;
     private LocalDateTime createdAt;
     private LocalDateTime closedAt;
@@ -67,6 +68,14 @@ public class OrderDTO extends AbstractPersistable<Long> {
 
     public void setAdditionalPriceList(List<AdditionalPriceDTO> additionalPriceList) {
         this.additionalPriceList = additionalPriceList;
+    }
+
+    public String getTrackCode() {
+        return trackCode;
+    }
+
+    public void setTrackCode(String trackCode) {
+        this.trackCode = trackCode;
     }
 
     public Status getStatus() {

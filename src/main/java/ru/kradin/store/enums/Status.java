@@ -1,7 +1,8 @@
 package ru.kradin.store.enums;
 
 public enum Status {
-    REGISTERED("Зарегистрирован");
+    REGISTERED("Зарегистрирован"),
+    COMPLETED("Выполнен");
 
     private final String status;
 

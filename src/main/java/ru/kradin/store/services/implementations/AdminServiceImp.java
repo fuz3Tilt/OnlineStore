@@ -1,6 +1,5 @@
 package ru.kradin.store.services.implementations;
 
-import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -8,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kradin.store.DTOs.UserDTO;
 import ru.kradin.store.exceptions.UserNotFoundException;
 import ru.kradin.store.models.User;
