@@ -8,15 +8,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kradin.store.enums.TokenPurpose;
-import ru.kradin.store.exceptions.EmailAlreadyVerifiedException;
-import ru.kradin.store.exceptions.UserDoesNotHaveEmailException;
-import ru.kradin.store.exceptions.UserVerificationTokenAlreadyExistsException;
-import ru.kradin.store.exceptions.UserVerificationTokenNotFoundException;
+import ru.kradin.store.exceptions.*;
+import ru.kradin.store.models.EmailVerificationToken;
 import ru.kradin.store.models.User;
-import ru.kradin.store.models.UserVerificationToken;
+import ru.kradin.store.models.PasswordVerificationToken;
+import ru.kradin.store.models.VerificationToken;
+import ru.kradin.store.repositories.EmailVerificationTokenRepository;
+import ru.kradin.store.repositories.PasswordVerificationTokenRepository;
 import ru.kradin.store.repositories.UserRepository;
-import ru.kradin.store.repositories.UserVerificationTokenRepository;
+import ru.kradin.store.repositories.VerificationTokenRepository;
 import ru.kradin.store.services.interfaces.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -27,14 +27,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class VerificationServiceImp implements EmailVerificationService, TokenVerificationService {
+public class VerificationServiceImp implements EmailVerificationService, PasswordVerificationService {
     private static final Logger log = LoggerFactory.getLogger(VerificationServiceImp.class);
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserVerificationTokenRepository userVerificationTokenRepository;
+    private VerificationTokenRepository verificationTokenRepository;
+
+    @Autowired
+    private EmailVerificationTokenRepository emailVerificationTokenRepository;
+
+    @Autowired
+    private PasswordVerificationTokenRepository passwordVerificationTokenRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -45,51 +51,41 @@ public class VerificationServiceImp implements EmailVerificationService, TokenVe
     @Autowired
     private CurrentUserService currentUserService;
 
-    @Value("${store.email.verificationURL}")
-    private String emailVerificationUrl;
-
-    @Value("${store.password.resetURL}")
+    @Value("${store.passwordResetURL}")
     private String passwordResetUrl;
 
     private static final String EMAIL_VERIFYING_SUBJECT = "Подтверждение почты";
-    private static final String EMAIL_VERIFYING_TEXT = "Перейдите по ссылке, чтобы подтвердить почту: ";
+    private static final String EMAIL_VERIFYING_TEXT = "Код подтверждения: ";
     private static final String PASSWORD_RESET_SUBJECT = "Сброс пароля";
     private static final String PASSWORD_RESET_TEXT = "Перейдите по ссылке, чтобы сбросить пароль: ";
 
     @Override
     @PreAuthorize("isAuthenticated()")
-    public void sendVerificationEmail() throws UserDoesNotHaveEmailException, EmailAlreadyVerifiedException, UserVerificationTokenAlreadyExistsException {
-        User user = getUserForSendingVerificationEmail();
+    public void sendTokenToEmail(String email) {
+        deleteOldEmailTokenIfExist(email);
 
-        String token = generateVerificationToken(user,TokenPurpose.EMAIL_CONFIRMATION,60);
+        String token = generateVerificationTokenForEmailConfirmation(email,10);
 
-        String confirmationUrl = emailVerificationUrl + token;
-
-        emailService.sendSimpleMessage(user.getEmail(),EMAIL_VERIFYING_SUBJECT,EMAIL_VERIFYING_TEXT+confirmationUrl);
-        log.info("Verification email sent for {} .", user.getUsername());
+        emailService.sendSimpleMessage(email,EMAIL_VERIFYING_SUBJECT,EMAIL_VERIFYING_TEXT+token);
+        log.info("Verification email sent to {} .", email);
     }
 
     @Override
-    @Transactional
-    public void verifyEmail(String token) throws UserVerificationTokenNotFoundException {
-        User user = getUserForVerifyingEmail(token);
-        user.setEmailVerified(true);
-        user.setEnabled(true);
-        userRepository.save(user);
-        log.info("{} email verified.", user.getUsername());
-    }
-
-    @Override
-    public void sendPasswordResetEmail(String email) {
-        User user;
-
-        try {
-            user = getUserForSendingPasswordResetEmail(email);
-        } catch (NullPointerException e) {
-            return;
+    public boolean isEmailVerified(String email, String token) {
+        boolean emailVerified = false;
+        Optional<EmailVerificationToken> emailVerificationTokenOptional = emailVerificationTokenRepository.findByEmailAndToken(email,token);
+        if (emailVerificationTokenOptional.isPresent()) {
+            emailVerified = true;
+            emailVerificationTokenRepository.delete(emailVerificationTokenOptional.get());
         }
+        return emailVerified;
+    }
 
-        String token = generateVerificationToken(user,TokenPurpose.PASSWORD_RESET,60);
+    @Override
+    public void sendPasswordResetEmail(String email) throws UserNotFoundException, VerificationTokenAlreadyExistsException {
+        User user = getUserForSendingPasswordResetEmail(email);
+
+        String token = generateVerificationTokenForPasswordReset(user, 60);
 
         String resetUrl = passwordResetUrl + token;
 
@@ -99,104 +95,83 @@ public class VerificationServiceImp implements EmailVerificationService, TokenVe
 
     @Override
     @Transactional
-    public void resetPasswordWithToken(String token, String password) throws UserVerificationTokenNotFoundException {
+    public void resetPasswordWithToken(String token, String password) throws VerificationTokenNotFoundException {
         User user = getUserForResettingPasswordWithToken(token);
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
         log.info("{} password updated.", user.getUsername());
     }
 
-    private User getUserForSendingVerificationEmail() throws EmailAlreadyVerifiedException, UserDoesNotHaveEmailException, UserVerificationTokenAlreadyExistsException {
-        User user = currentUserService.get();
-
-        if (user.isEmailVerified())
-            throw new EmailAlreadyVerifiedException();
-
-        if (user.getEmail().isEmpty())
-            throw new UserDoesNotHaveEmailException();
-
-        Optional<UserVerificationToken> userVerificationTokenOptional
-                = userVerificationTokenRepository.findByUserAndTokenPurpose(user, TokenPurpose.EMAIL_CONFIRMATION);
-
-        if(userVerificationTokenOptional.isPresent()) {
-            UserVerificationToken userVerificationToken = userVerificationTokenOptional.get();
-            if(!isTokenExpired(userVerificationToken))
-                throw new UserVerificationTokenAlreadyExistsException();
-        }
-
-        return user;
-    }
-
-    @Transactional
-    private User getUserForVerifyingEmail(String token) throws UserVerificationTokenNotFoundException {
-        Optional<UserVerificationToken> userVerificationTokenOptional
-                = userVerificationTokenRepository.findByTokenAndTokenPurpose(token,TokenPurpose.EMAIL_CONFIRMATION);
-        if (userVerificationTokenOptional.isEmpty())
-            throw new UserVerificationTokenNotFoundException();
-
-        UserVerificationToken userVerificationToken = userVerificationTokenOptional.get();
-
-        if (isTokenExpired(userVerificationToken))
-            throw new UserVerificationTokenNotFoundException();
-
-        userVerificationTokenRepository.delete(userVerificationToken);
-
-        return userVerificationToken.getUser();
-    }
-
-    private User getUserForSendingPasswordResetEmail(String email) throws NullPointerException{
+    private User getUserForSendingPasswordResetEmail(String email) throws UserNotFoundException, VerificationTokenAlreadyExistsException {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if(userOptional.isEmpty())
-            throw new NullPointerException();
+            throw new UserNotFoundException();
 
         User user = userOptional.get();
 
         if(!user.isEmailVerified())
-            throw new NullPointerException();
+            throw new UserNotFoundException();
 
-        Optional<UserVerificationToken> userVerificationTokenOptional
-                = userVerificationTokenRepository.findByUserAndTokenPurpose(user,TokenPurpose.PASSWORD_RESET);
+        Optional<PasswordVerificationToken> passwordVerificationTokenOptional
+                = passwordVerificationTokenRepository.findByUser(user);
 
-        if(userVerificationTokenOptional.isPresent()) {
-            UserVerificationToken userVerificationToken = userVerificationTokenOptional.get();
-            if (!isTokenExpired(userVerificationToken))
-                throw new NullPointerException();
+        if(passwordVerificationTokenOptional.isPresent()) {
+            PasswordVerificationToken passwordVerificationToken = passwordVerificationTokenOptional.get();
+            if (!isTokenExpired(passwordVerificationToken))
+                throw new VerificationTokenAlreadyExistsException();
         }
         return user;
     }
 
     @Transactional
-    private User getUserForResettingPasswordWithToken(String token) throws UserVerificationTokenNotFoundException {
-        Optional<UserVerificationToken> userVerificationTokenOptional =
-                userVerificationTokenRepository.findByTokenAndTokenPurpose(token,TokenPurpose.PASSWORD_RESET);
+    private User getUserForResettingPasswordWithToken(String token) throws VerificationTokenNotFoundException {
+        Optional<PasswordVerificationToken> passwordVerificationTokenOptional =
+                passwordVerificationTokenRepository.findByToken(token);
 
-        if (userVerificationTokenOptional.isEmpty())
-            throw new UserVerificationTokenNotFoundException();
+        if (passwordVerificationTokenOptional.isEmpty())
+            throw new VerificationTokenNotFoundException();
 
-        UserVerificationToken userVerificationToken = userVerificationTokenOptional.get();
+        PasswordVerificationToken passwordVerificationToken = passwordVerificationTokenOptional.get();
 
-        if (isTokenExpired(userVerificationToken))
-            throw new UserVerificationTokenNotFoundException();
+        if (isTokenExpired(passwordVerificationToken))
+            throw new VerificationTokenNotFoundException();
 
-        userVerificationTokenRepository.delete(userVerificationToken);
+        passwordVerificationTokenRepository.delete(passwordVerificationToken);
 
-        return userVerificationToken.getUser();
+        return passwordVerificationToken.getUser();
     }
 
-    private String generateVerificationToken(User user, TokenPurpose tokenPurpose, int tokenLifetimeInMinutes){
-        String token = randomToken();
+    public void deleteOldEmailTokenIfExist(String email) {
+        Optional<EmailVerificationToken> emailVerificationTokenOptional = emailVerificationTokenRepository.findByEmail(email);
+        if (emailVerificationTokenOptional.isPresent())
+            emailVerificationTokenRepository.delete(emailVerificationTokenOptional.get());
+    }
+
+    private String generateVerificationTokenForPasswordReset(User user, int tokenLifetimeInMinutes){
+        String token = randomStringToken();
         LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(tokenLifetimeInMinutes);
-        UserVerificationToken userVerificationToken = new UserVerificationToken(
+        PasswordVerificationToken passwordVerificationToken = new PasswordVerificationToken(
                 user,
                 token,
-                tokenPurpose,
                 expiryDate
         );
-        userVerificationTokenRepository.save(userVerificationToken);
-        return userVerificationToken.getToken();
+        passwordVerificationTokenRepository.save(passwordVerificationToken);
+        return passwordVerificationToken.getToken();
     }
 
-    private static String randomToken() {
+    private String generateVerificationTokenForEmailConfirmation(String email, int tokenLifetimeInMinutes) {
+        String token = randomNumberToken();
+        LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(tokenLifetimeInMinutes);
+        EmailVerificationToken  emailVerificationToken= new EmailVerificationToken(
+                email,
+                token,
+                expiryDate
+        );
+        emailVerificationTokenRepository.save(emailVerificationToken);
+        return emailVerificationToken.getToken();
+    }
+
+    private static String randomStringToken() {
         try {
         int numberOfPieces = 5;
         StringBuilder tokenBuilder = new StringBuilder();
@@ -207,9 +182,6 @@ public class VerificationServiceImp implements EmailVerificationService, TokenVe
             secureRandom.nextBytes(partOfTokenBytes);
             String partOfToken = Base64.getEncoder().encodeToString(partOfTokenBytes);
             tokenBuilder.append(partOfToken);
-            if (i < numberOfPieces-1) {
-                tokenBuilder.append("-");
-            }
         }
         return tokenBuilder.toString();
         } catch (NoSuchAlgorithmException e) {
@@ -217,11 +189,32 @@ public class VerificationServiceImp implements EmailVerificationService, TokenVe
         }
     }
 
+    public String randomNumberToken() {
+        SecureRandom secureRandom;
+        StringBuilder tokenBuilder = new StringBuilder();
+        try {
+            secureRandom = SecureRandom.getInstanceStrong();
+        } catch (NoSuchAlgorithmException e) {
+            secureRandom = new SecureRandom();
+        }
+        for (int i = 1;i<=6;i++) {
+            int randomNumber;
+
+            if (i == 1)
+                randomNumber = secureRandom.nextInt(1,10);
+            else
+                randomNumber = secureRandom.nextInt(10);
+
+            tokenBuilder.append(randomNumber);
+        }
+        return tokenBuilder.toString();
+    }
+
     @Transactional
-    private boolean isTokenExpired(UserVerificationToken userVerificationToken){
-        boolean isExpired = userVerificationToken.getExpiryDate().isBefore(LocalDateTime.now());
+    private boolean isTokenExpired(VerificationToken verificationToken){
+        boolean isExpired = verificationToken.getExpiryDate().isBefore(LocalDateTime.now());
         if(isExpired)
-            userVerificationTokenRepository.delete(userVerificationToken);
+            verificationTokenRepository.delete(verificationToken);
 
         return isExpired;
     }

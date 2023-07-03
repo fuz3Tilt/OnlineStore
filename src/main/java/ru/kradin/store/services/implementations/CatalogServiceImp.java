@@ -36,7 +36,7 @@ public class CatalogServiceImp implements AdminCatalogService {
     @Autowired
     private ImageService imageService;
     @Value("${store.imagesURL}")
-    static String imagesURL;
+    private String imagesURL;
     private static final String IMAGE_NOT_FOUND = "IMAGE_NOT_FOUND";
 
     @Override

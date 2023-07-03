@@ -1,10 +1,8 @@
 package ru.kradin.store.services.interfaces;
 
-import ru.kradin.store.exceptions.EmailAlreadyVerifiedException;
-import ru.kradin.store.exceptions.UserDoesNotHaveEmailException;
-import ru.kradin.store.exceptions.UserVerificationTokenAlreadyExistsException;
+import ru.kradin.store.exceptions.*;
 
 public interface EmailVerificationService {
-    void sendVerificationEmail() throws UserDoesNotHaveEmailException, EmailAlreadyVerifiedException, UserVerificationTokenAlreadyExistsException;
-    void sendPasswordResetEmail(String email);
+    void sendTokenToEmail(String email) throws UserDoesNotHaveEmailException, EmailAlreadyVerifiedException, VerificationTokenAlreadyExistsException;
+    boolean isEmailVerified (String email, String token) throws VerificationTokenNotFoundException;
 }

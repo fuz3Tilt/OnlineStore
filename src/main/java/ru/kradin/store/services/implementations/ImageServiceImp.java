@@ -3,8 +3,6 @@ package ru.kradin.store.services.implementations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kradin.store.services.interfaces.ImageService;
@@ -22,7 +20,7 @@ import java.util.UUID;
 public class ImageServiceImp implements ImageService {
     private static final Logger log = LoggerFactory.getLogger(ImageServiceImp.class);
     @Value("${store.uploadPath}")
-    private static String uploadPath;
+    private String uploadPath;
 
     @Override
     public String save(MultipartFile imageToSave) throws IOException {

@@ -30,7 +30,7 @@ public class CryptoUtil {
     @Value("${security.key}")
     private static String key;
     @Value("${security.shiftAmount}")
-    private static int shift_amount;
+    private static int shiftAmount;
 
     public static String encrypt(String data) throws Exception {
         int ivLength = ThreadLocalRandom.current().nextInt(96, 255); // генерируем случайную длину IV в диапазоне от 12 до 64
@@ -45,7 +45,7 @@ public class CryptoUtil {
         byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
         byte[] encryptedWithIV = new byte[iv.length + encrypted.length + 4];
         ByteBuffer buffer = ByteBuffer.wrap(encryptedWithIV);
-        buffer.putInt(ivLength+shift_amount);
+        buffer.putInt(ivLength+shiftAmount);
         buffer.put(iv);
         buffer.put(encrypted);
         return Base64.getEncoder().encodeToString(encryptedWithIV);
@@ -54,7 +54,7 @@ public class CryptoUtil {
     public static String decrypt(String data) throws Exception {
         byte[] encryptedData = Base64.getDecoder().decode(data);
         ByteBuffer buffer = ByteBuffer.wrap(encryptedData);
-        int ivLength = buffer.getInt()-shift_amount;
+        int ivLength = buffer.getInt()-shiftAmount;
         byte[] iv = new byte[ivLength];
         buffer.get(iv);
         byte[] encrypted = new byte[encryptedData.length - 4 - ivLength];
@@ -85,12 +85,12 @@ public class CryptoUtil {
         secureRandom.nextBytes(keyBytes);
         key = Base64.getEncoder().encodeToString(keyBytes);
 
-        shift_amount = ThreadLocalRandom.current().nextInt(524, 65536);
+        shiftAmount = ThreadLocalRandom.current().nextInt(524, 65536);
         if (secureRandom.nextBoolean())
-            shift_amount = -shift_amount;
+            shiftAmount = -shiftAmount;
 
         try {
-            updateKeyAndShiftAmount(key,shift_amount);
+            updateKeyAndShiftAmount(key,shiftAmount);
             log.info("Encryption keys successfully updated.");
         } catch (IOException e) {
             log.error("Fatal error. Encryption keys cannot be write into application.properties");

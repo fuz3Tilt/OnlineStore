@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kradin.store.repositories.CartRepository;
 import ru.kradin.store.repositories.UserRepository;
-import ru.kradin.store.repositories.UserVerificationTokenRepository;
+import ru.kradin.store.repositories.VerificationTokenRepository;
 import ru.kradin.store.tasks.AdminTask;
 import ru.kradin.store.tasks.SecureTask;
-import ru.kradin.store.tasks.UserVerificationTokenTask;
+import ru.kradin.store.tasks.VerificationTokenTask;
 
 @Configuration
 @EnableScheduling
@@ -27,7 +27,7 @@ public class SchedulingConfig {
     private CartRepository cartRepository;
 
     @Autowired
-    private UserVerificationTokenRepository userVerificationTokenRepository;
+    private VerificationTokenRepository verificationTokenRepository;
 
     @Bean
     public AdminTask adminTask() {
@@ -35,8 +35,8 @@ public class SchedulingConfig {
     }
 
     @Bean
-    public UserVerificationTokenTask userVerificationTokenTask() {
-        return new UserVerificationTokenTask(userVerificationTokenRepository);
+    public VerificationTokenTask verificationTokenTask() {
+        return new VerificationTokenTask(verificationTokenRepository);
     }
 
     @Bean
@@ -50,8 +50,8 @@ public class SchedulingConfig {
     }
 
     @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
-    public void runUserVerificationTokenTask() {
-        userVerificationTokenTask().run();
+    public void runVerificationTokenTask() {
+        verificationTokenTask().run();
     }
 
     @Scheduled(cron = "0 0 3 * * *")
