@@ -1,9 +1,11 @@
-package ru.kradin.store.utils;
+package ru.kradin.store.services.implementations;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import ru.kradin.store.services.implementations.AdminServiceImp;
+import org.springframework.stereotype.Service;
+import ru.kradin.store.services.interfaces.CryptoService;
+import ru.kradin.store.services.interfaces.CryptoSettingsService;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -24,15 +26,17 @@ import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class CryptoUtil {
-    private static final Logger log = LoggerFactory.getLogger(CryptoUtil.class);
+@Service
+public class CryptoServiceImp implements CryptoService, CryptoSettingsService {
+    private static final Logger log = LoggerFactory.getLogger(CryptoServiceImp.class);
     private static final String PATH_TO_PROPERTIES = "src/main/resources/application.properties";
     @Value("${security.key}")
-    private static String key;
+    private String key;
     @Value("${security.shiftAmount}")
-    private static int shiftAmount;
+    private int shiftAmount;
 
-    public static String encrypt(String data) throws Exception {
+    @Override
+    public String encrypt(String data) throws Exception {
         int ivLength = ThreadLocalRandom.current().nextInt(96, 255); // генерируем случайную длину IV в диапазоне от 12 до 64
         byte[] iv = generateIV(ivLength); // создаем массив IV заданной длины
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
@@ -51,7 +55,8 @@ public class CryptoUtil {
         return Base64.getEncoder().encodeToString(encryptedWithIV);
     }
 
-    public static String decrypt(String data) throws Exception {
+    @Override
+    public String decrypt(String data) throws Exception {
         byte[] encryptedData = Base64.getDecoder().decode(data);
         ByteBuffer buffer = ByteBuffer.wrap(encryptedData);
         int ivLength = buffer.getInt()-shiftAmount;
@@ -70,7 +75,8 @@ public class CryptoUtil {
         return new String(decrypted, StandardCharsets.UTF_8);
     }
 
-    public static void generateNewKeyAndShiftAmount() {
+    @Override
+    public void generateNewKeyAndShiftAmount() {
         SecureRandom secureRandom;
 
         try {
