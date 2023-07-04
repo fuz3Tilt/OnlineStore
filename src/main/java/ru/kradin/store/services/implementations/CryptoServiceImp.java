@@ -30,9 +30,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class CryptoServiceImp implements CryptoService, CryptoSettingsService {
     private static final Logger log = LoggerFactory.getLogger(CryptoServiceImp.class);
     private static final String PATH_TO_PROPERTIES = "src/main/resources/application.properties";
-    @Value("${security.key}")
+    @Value("${store.security.key}")
     private String key;
-    @Value("${security.shiftAmount}")
+    @Value("${store.security.shiftAmount}")
     private int shiftAmount;
 
     @Override
@@ -115,10 +115,10 @@ public class CryptoServiceImp implements CryptoService, CryptoSettingsService {
         List<String> lines = Files.readAllLines(path);
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
-            if (line.startsWith("security.key=")) {
-                lines.set(i, "security.key=" + newKey);
-            } else if (line.startsWith("security.shiftAmount=")) {
-                lines.set(i, "security.shiftAmount=" + newShiftAmount);
+            if (line.startsWith("store.security.key=")) {
+                lines.set(i, "store.security.key=" + newKey);
+            } else if (line.startsWith("store.security.shiftAmount=")) {
+                lines.set(i, "store.security.shiftAmount=" + newShiftAmount);
             }
         }
         Files.write(path, lines);
