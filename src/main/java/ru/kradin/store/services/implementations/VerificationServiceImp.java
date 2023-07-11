@@ -61,7 +61,7 @@ public class VerificationServiceImp implements EmailVerificationService, Passwor
 
     @Override
     @PreAuthorize("isAuthenticated()")
-    public void sendTokenToEmail(String email) {
+    public void requestTokenForEmail(String email) {
         deleteOldEmailTokenIfExist(email);
 
         String token = generateVerificationTokenForEmailConfirmation(email,10);
@@ -71,9 +71,10 @@ public class VerificationServiceImp implements EmailVerificationService, Passwor
     }
 
     @Override
-    public boolean isEmailVerified(String email, String token) {
+    public boolean isEmailVerified(String email, Integer token) {
         boolean emailVerified = false;
-        Optional<EmailVerificationToken> emailVerificationTokenOptional = emailVerificationTokenRepository.findByEmailAndToken(email,token);
+        Optional<EmailVerificationToken> emailVerificationTokenOptional
+                = emailVerificationTokenRepository.findByEmailAndToken(email,String.valueOf(token));
         if (emailVerificationTokenOptional.isPresent()) {
             emailVerified = true;
             emailVerificationTokenRepository.delete(emailVerificationTokenOptional.get());

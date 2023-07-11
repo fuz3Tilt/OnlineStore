@@ -1,6 +1,6 @@
 package ru.kradin.store.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import ru.kradin.store.enums.Status;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "ordr")
 public class Order extends AbstractPersistable<Long> {
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<OrderGoodQuantity> goodQuantityList;
     @ManyToOne
     @JoinColumn(nullable = false)

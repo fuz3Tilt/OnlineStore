@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul  http://www.zkoss.org/2005/zul/zul.xsd">
+    <window vflex="1" width="50%" border="normal"
+            mode="modal" closable="true" onCancel="@command('close')"
+            viewModel="@id('vm') @init('ru.kradin.store.viewmodels.settings.SettingsEditVM')">
+        <tabbox orient="top" vflex="1">
+            <tabs>
+                <tab label="Full name" sclass="left"/>
+                <tab label="Email" />
+                <tab label="Password" />
+            </tabs>
+            <tabpanels>
+                <tabpanel><include src="~./settings/fullNameEdit.zul"/></tabpanel>
+                <tabpanel><include src="~./settings/emailEdit.zul"/></tabpanel>
+                <tabpanel><include src="~./settings/passwordEdit.zul"/></tabpanel>
+            </tabpanels>
+        </tabbox>
+        <button label="close" onClick="@command('close')"/>
+    </window>
+</zk>

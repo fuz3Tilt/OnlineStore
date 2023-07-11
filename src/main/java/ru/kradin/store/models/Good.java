@@ -1,6 +1,6 @@
 package ru.kradin.store.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity

@@ -38,11 +38,10 @@ public class AdminTask extends TimerTask {
             User admin = new User(
                     "admin",
                     passwordEncoder.encode("admin"),
-                    "Администратов",
                     "Администратор",
                     "Администраторович",
+                    "Администраторов",
                     adminEmail,
-                    true,
                     true,
                     true,
                     LocalDateTime.now(),

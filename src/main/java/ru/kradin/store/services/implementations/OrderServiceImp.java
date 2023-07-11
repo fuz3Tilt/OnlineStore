@@ -13,6 +13,7 @@ import ru.kradin.store.enums.Status;
 import ru.kradin.store.models.*;
 import ru.kradin.store.repositories.CartRepository;
 import ru.kradin.store.repositories.GoodRepository;
+import ru.kradin.store.repositories.OrderGoodQuantityRepository;
 import ru.kradin.store.repositories.OrderRepository;
 import ru.kradin.store.services.interfaces.AdminOrderService;
 import ru.kradin.store.services.interfaces.CurrentUserService;
@@ -34,11 +35,17 @@ public class OrderServiceImp implements AdminOrderService, UserOrderService {
     private CartRepository cartRepository;
     @Autowired
     private GoodRepository goodRepository;
+    @Autowired
+    private OrderGoodQuantityRepository orderGoodQuantityRepository;
 
     @Override
     @PreAuthorize("isAuthenticated()")
     public List<OrderDTO> getOrders() {
         List<Order> orderList = orderRepository.findByUser(currentUserService.get());
+        for (Order order:orderList) {
+            List<OrderGoodQuantity> orderGoodQuantityList = orderGoodQuantityRepository.findByOrder(order);
+            order.setGoodQuantityList(orderGoodQuantityList);
+        }
         List<OrderDTO> orderDTOList = modelMapper.map(orderList, new TypeToken<List<OrderDTO>>() {}.getType());
         return orderDTOList;
     }
@@ -104,6 +111,10 @@ public class OrderServiceImp implements AdminOrderService, UserOrderService {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<OrderDTO> getAll() {
         List<Order> orderList = orderRepository.findAll();
+        for (Order order:orderList) {
+            List<OrderGoodQuantity> orderGoodQuantityList = orderGoodQuantityRepository.findByOrder(order);
+            order.setGoodQuantityList(orderGoodQuantityList);
+        }
         List<OrderDTO> orderDTOList = modelMapper.map(orderList, new TypeToken<List<OrderDTO>>() {}.getType());
         return orderDTOList;
     }

@@ -3,10 +3,11 @@ package ru.kradin.store.DTOs;
 public class RegistrationDTO {
     private String username;
     private String password;
-    private String lastName;
     private String firstName;
     private String middleName;
+    private String lastName;
     private String email;
+    private Integer token;
 
     public String getUsername() {
         return username;
@@ -54,5 +55,13 @@ public class RegistrationDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getToken() {
+        return token;
+    }
+
+    public void setToken(Integer token) {
+        this.token = token;
     }
 }

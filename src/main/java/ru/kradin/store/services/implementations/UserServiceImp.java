@@ -9,9 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kradin.store.DTOs.UserDTO;
+import ru.kradin.store.exceptions.PasswordMismatchException;
+import ru.kradin.store.exceptions.VerificationTokenNotFoundException;
 import ru.kradin.store.models.User;
 import ru.kradin.store.repositories.UserRepository;
 import ru.kradin.store.services.interfaces.CurrentUserService;
+import ru.kradin.store.services.interfaces.EmailVerificationService;
 import ru.kradin.store.services.interfaces.UserService;
 
 @Service
@@ -31,6 +34,9 @@ public class UserServiceImp implements UserService {
     @Autowired
     private CurrentUserService currentUserService;
 
+    @Autowired
+    private EmailVerificationService emailVerificationService;
+
     @Override
     @PreAuthorize("isAuthenticated()")
     public UserDTO getCurrent() {
@@ -40,22 +46,40 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    @Transactional
-    @PreAuthorize("isAuthenticated()")
-    public void updateEmail(String email) {
-        User user = currentUserService.get();
-        user.setEmail(email);
-        user.setEmailVerified(false);
-        userRepository.save(user);
-        log.info("{} email updated.", user.getUsername());
+    public void requestTokenForEmail(String email) {
+        emailVerificationService.requestTokenForEmail(email);
     }
 
     @Override
     @Transactional
     @PreAuthorize("isAuthenticated()")
-    public void updatePassword(String password) {
+    public void updateEmail(String email, Integer token) throws VerificationTokenNotFoundException {
+        if (emailVerificationService.isEmailVerified(email, token)) {
+            User user = currentUserService.get();
+            user.setEmail(email);
+            user.setEmailVerified(false);
+            userRepository.save(user);
+            log.info("{} email updated.", user.getUsername());
+        } else {
+            throw new VerificationTokenNotFoundException();
+        }
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
+    public void updatePassword(String oldPassword, String newPassword, String passwordConfirm) throws PasswordMismatchException {
         User user = currentUserService.get();
-        user.setPassword(passwordEncoder.encode(password));
+        if (!newPassword.equals(passwordConfirm))
+            throw new PasswordMismatchException("Passwords don't match");
+
+        if (newPassword.length() <= 4)
+            throw new PasswordMismatchException("Password length should be greater than 4");
+
+        if (!passwordEncoder.matches(oldPassword,user.getPassword()))
+            throw new PasswordMismatchException("Invalid old password");
+
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         log.info("{} password updated.", user.getUsername());
     }
@@ -63,30 +87,12 @@ public class UserServiceImp implements UserService {
     @Override
     @Transactional
     @PreAuthorize("isAuthenticated()")
-    public void updateLastName(String lastName) {
-        User user = currentUserService.get();
-        user.setLastName(lastName);
-        userRepository.save(user);
-        log.info("{} last name updated.", user.getUsername());
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("isAuthenticated()")
-    public void updateFirstName(String firstName) {
+    public void updateFullName(String firstName, String middleName, String lastName) {
         User user = currentUserService.get();
         user.setFirstName(firstName);
-        userRepository.save(user);
-        log.info("{} first name updated.", user.getUsername());
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("isAuthenticated()")
-    public void updateMiddleName(String middleName) {
-        User user = currentUserService.get();
         user.setMiddleName(middleName);
+        user.setLastName(lastName);
         userRepository.save(user);
-        log.info("{} middle name updated.", user.getUsername());
+        log.info("{} full name updated.", user.getUsername());
     }
 }

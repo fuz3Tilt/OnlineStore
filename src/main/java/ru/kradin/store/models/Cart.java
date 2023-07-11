@@ -1,13 +1,13 @@
 package ru.kradin.store.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.List;
 
 @Entity
 public class Cart extends AbstractPersistable<Long> {
-    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<CartGoodQuantity> goodQuantityList;
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(nullable = false, unique = true)

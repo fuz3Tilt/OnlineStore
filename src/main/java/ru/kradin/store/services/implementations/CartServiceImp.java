@@ -10,6 +10,7 @@ import ru.kradin.store.DTOs.GoodQuantityCreateDTO;
 import ru.kradin.store.models.Cart;
 import ru.kradin.store.models.Good;
 import ru.kradin.store.models.CartGoodQuantity;
+import ru.kradin.store.repositories.CartGoodQuantityRepository;
 import ru.kradin.store.repositories.CartRepository;
 import ru.kradin.store.repositories.GoodRepository;
 import ru.kradin.store.services.interfaces.CartService;
@@ -26,12 +27,16 @@ public class CartServiceImp implements CartService {
     @Autowired
     private CartRepository cartRepository;
     @Autowired
+    private CartGoodQuantityRepository cartGoodQuantityRepository;
+    @Autowired
     private GoodRepository goodRepository;
 
     @Override
     @PreAuthorize("isAuthenticated()")
     public CartDTO getCurtOfCurrentUser() {
         Cart cart = cartRepository.findByUser(currentUserService.get());
+        List<CartGoodQuantity> cartGoodQuantityList = cartGoodQuantityRepository.findByCart(cart);
+        cart.setGoodQuantityList(cartGoodQuantityList);
         CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
         return cartDTO;
     }

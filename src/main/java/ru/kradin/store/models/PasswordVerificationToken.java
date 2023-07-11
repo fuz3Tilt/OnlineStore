@@ -1,13 +1,12 @@
 package ru.kradin.store.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 public class PasswordVerificationToken extends VerificationToken {
     @OneToOne
-    @JoinColumn(nullable = false)
     private User user;
 
     public PasswordVerificationToken() {

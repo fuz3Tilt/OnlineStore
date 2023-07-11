@@ -1,6 +1,6 @@
 package ru.kradin.store.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import ru.kradin.store.enums.Role;
 
@@ -17,7 +17,6 @@ public class User extends AbstractPersistable<Long> {
     private String lastName;
     @Column(nullable = false)
     private String firstName;
-    @Column(nullable = false)
     private String middleName;
     @Column(unique = true, nullable = false)
     private String email;
@@ -25,8 +24,6 @@ public class User extends AbstractPersistable<Long> {
     private boolean emailVerified;
     @Column(nullable = false)
     private boolean accountNonLocked;
-    @Column(nullable = false)
-    private boolean enabled;
     @OneToOne(mappedBy = "user", cascade = CascadeType.MERGE)
     Cart cart;
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
@@ -38,7 +35,7 @@ public class User extends AbstractPersistable<Long> {
     public User() {
     }
 
-    public User(String username, String password, String lastName, String firstName, String middleName, String email, boolean emailVerified, boolean accountNonLocked, boolean enabled, LocalDateTime createdAt, Role role) {
+    public User(String username, String password, String firstName, String middleName, String lastName, String email, boolean emailVerified, boolean accountNonLocked, LocalDateTime createdAt, Role role) {
         this.username = username;
         this.password = password;
         this.lastName = lastName;
@@ -47,7 +44,6 @@ public class User extends AbstractPersistable<Long> {
         this.email = email;
         this.emailVerified = emailVerified;
         this.accountNonLocked = accountNonLocked;
-        this.enabled = enabled;
         this.createdAt = createdAt;
         this.role = role;
     }
@@ -114,14 +110,6 @@ public class User extends AbstractPersistable<Long> {
 
     public void setAccountNonLocked(boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public Cart getCart() {

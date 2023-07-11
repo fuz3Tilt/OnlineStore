@@ -1,14 +1,13 @@
 package ru.kradin.store.models;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class CartGoodQuantity extends GoodQuantity {
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(nullable = false)
     private Cart cart;
 
     public CartGoodQuantity() {

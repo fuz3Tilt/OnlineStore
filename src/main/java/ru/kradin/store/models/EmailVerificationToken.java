@@ -1,13 +1,13 @@
 package ru.kradin.store.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
 import java.time.LocalDateTime;
 
 @Entity
 public class EmailVerificationToken extends VerificationToken{
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
     public EmailVerificationToken() {

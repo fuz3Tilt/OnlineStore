@@ -1,18 +1,18 @@
 package ru.kradin.store.services.interfaces;
 
 import ru.kradin.store.DTOs.UserDTO;
+import ru.kradin.store.exceptions.PasswordMismatchException;
+import ru.kradin.store.exceptions.VerificationTokenNotFoundException;
 
 public interface UserService {
 
     public UserDTO getCurrent();
 
-    public void updateEmail(String email);
+    public void requestTokenForEmail(String email);
 
-    public void updatePassword(String password);
+    public void updateEmail(String email, Integer token) throws VerificationTokenNotFoundException;
 
-    public void updateLastName(String lastName);
+    public void updatePassword(String oldPassword, String newPassword, String passwordConfirm) throws PasswordMismatchException;
 
-    public void updateFirstName(String firstName);
-
-    public void updateMiddleName(String middleName);
+    public void updateFullName(String firstName, String middleName, String lastName);
 }
