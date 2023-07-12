@@ -8,27 +8,22 @@ import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zkplus.spring.DelegatingVariableResolver;
 import org.zkoss.zul.Messagebox;
 import ru.kradin.store.exceptions.PasswordMismatchException;
-import ru.kradin.store.services.implementations.UserServiceImp;
+import ru.kradin.store.services.interfaces.UserService;
 
 @VariableResolver(DelegatingVariableResolver.class)
-
 public class PasswordEditVM {
     private String oldPassword = "";
     private String newPassword = "";
     private String passwordConfirm = "";
-    /*
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    Cannot be used via an interface in a ZK bean
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     */
-    @WireVariable
-    private UserServiceImp userServiceImp;
+
+    @WireVariable("userServiceImp")
+    private UserService userService;
 
     @Command("save")
     @NotifyChange("errorMessage")
     public void save() {
         try {
-            userServiceImp.updatePassword(oldPassword, newPassword, passwordConfirm);
+            userService.updatePassword(oldPassword, newPassword, passwordConfirm);
             Executions.sendRedirect("/logout");
         } catch (PasswordMismatchException e) {
             Messagebox.show(e.getMessage(),"Error",Messagebox.OK,Messagebox.ERROR);

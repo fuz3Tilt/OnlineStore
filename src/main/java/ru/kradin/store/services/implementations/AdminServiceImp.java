@@ -5,10 +5,12 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kradin.store.DTOs.UserDTO;
+import ru.kradin.store.enums.Role;
 import ru.kradin.store.exceptions.UserNotFoundException;
 import ru.kradin.store.models.User;
 import ru.kradin.store.repositories.UserRepository;
@@ -38,8 +40,12 @@ public class AdminServiceImp implements AdminService {
     @Override
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void toggleUserBan(String username) throws UserNotFoundException {
+    public void toggleUserBan(String username) throws UserNotFoundException, AccessDeniedException {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException());
+
+        if (user.getRole().equals(Role.ROLE_ADMIN))
+            throw new AccessDeniedException("You can't ban the administrator");
+
         toggleAccountNonLockedField(user);
         userRepository.save(user);
     }

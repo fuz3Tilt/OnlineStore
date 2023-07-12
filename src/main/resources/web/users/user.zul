@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul  http://www.zkoss.org/2005/zul/zul.xsd">
+    <window vflex="1" width="50%" border="normal"
+            mode="modal" closable="true" onCancel="@command('close')"
+            viewModel="@id('vm') @init('ru.kradin.store.viewmodels.users.UserVM')">
+        <listbox>
+            <listhead>
+                <listheader/>
+                <listheader/>
+            </listhead>
+            <listitem>
+                <listcell>
+                    <label value="Username:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.user.username)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="First name:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.user.firstName)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Middle name:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.user.middleName)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Last name:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.user.lastName)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Email:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.user.email)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Email verified:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.user.emailVerified)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Account non locked:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.user.accountNonLocked)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Created at:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.user.createdAt)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Role:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.user.role)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Close:"/>
+                </listcell>
+                <listcell>
+                    <button label="perform" onClick="@command('close')"/>
+                </listcell>
+            </listitem>
+        </listbox>
+    </window>
+</zk>

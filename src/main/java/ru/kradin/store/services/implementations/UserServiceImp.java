@@ -57,7 +57,7 @@ public class UserServiceImp implements UserService {
         if (emailVerificationService.isEmailVerified(email, token)) {
             User user = currentUserService.get();
             user.setEmail(email);
-            user.setEmailVerified(false);
+            user.setEmailVerified(true);
             userRepository.save(user);
             log.info("{} email updated.", user.getUsername());
         } else {

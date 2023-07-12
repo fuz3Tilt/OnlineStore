@@ -8,21 +8,16 @@ import org.zkoss.zkplus.spring.DelegatingVariableResolver;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 import ru.kradin.store.exceptions.VerificationTokenNotFoundException;
-import ru.kradin.store.services.implementations.UserServiceImp;
+import ru.kradin.store.services.interfaces.UserService;
 
 @VariableResolver(DelegatingVariableResolver.class)
-
 public class EmailEditVM {
     private Window parentWindow;
     private String newEmail = "";
     private Integer token = 0;
-    /*
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    Cannot be used via an interface in a ZK bean
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     */
-    @WireVariable
-    private UserServiceImp userServiceImp;
+
+    @WireVariable("userServiceImp")
+    private UserService userService;
 
     @AfterCompose
     public void afterCompose(@ContextParam(ContextType.VIEW) Window window) {
@@ -32,7 +27,7 @@ public class EmailEditVM {
     @Command("sendToken")
     public void sendToken() {
         if (newEmail.contains("@")) {
-            userServiceImp.requestTokenForEmail(newEmail);
+            userService.requestTokenForEmail(newEmail);
             Messagebox.show("Check your email", "Message", Messagebox.OK, Messagebox.INFORMATION);
         }
     }
@@ -40,7 +35,7 @@ public class EmailEditVM {
     @NotifyChange("*")
     public void save() {
         try {
-            userServiceImp.updateEmail(newEmail,token);
+            userService.updateEmail(newEmail,token);
             cancel();
             Events.postEvent("onAdminChange", parentWindow, null);
             Messagebox.show("Email successfully updated", "Message", Messagebox.OK, Messagebox.INFORMATION);
