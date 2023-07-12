@@ -25,6 +25,7 @@ public class Order extends AbstractPersistable<Long> {
     private List<AdditionalPrice> additionalPriceList;
     private String trackCode;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status;
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;

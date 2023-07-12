@@ -37,8 +37,8 @@ public class CryptoServiceImp implements CryptoService, CryptoSettingsService {
 
     @Override
     public String encrypt(String data) throws Exception {
-        int ivLength = ThreadLocalRandom.current().nextInt(96, 255); // генерируем случайную длину IV в диапазоне от 12 до 64
-        byte[] iv = generateIV(ivLength); // создаем массив IV заданной длины
+        int ivLength = ThreadLocalRandom.current().nextInt(96, 524);
+        byte[] iv = generateIV(ivLength);
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         KeySpec spec = new PBEKeySpec(key.toCharArray(), iv, 65536, 256);
         SecretKey tmp = factory.generateSecret(spec);
@@ -91,7 +91,7 @@ public class CryptoServiceImp implements CryptoService, CryptoSettingsService {
         secureRandom.nextBytes(keyBytes);
         key = Base64.getEncoder().encodeToString(keyBytes);
 
-        shiftAmount = ThreadLocalRandom.current().nextInt(524, 65536);
+        shiftAmount = ThreadLocalRandom.current().nextInt(65536, Integer.MAX_VALUE);
         if (secureRandom.nextBoolean())
             shiftAmount = -shiftAmount;
 
