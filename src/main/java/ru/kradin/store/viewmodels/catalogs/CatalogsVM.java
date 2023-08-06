@@ -48,7 +48,7 @@ public class CatalogsVM {
     @Command("newCatalog")
     public void newCatalog() {
         Window newWindow = (Window) Executions.createComponents("~./catalogs/newCatalog.zul", window, null);
-        newWindow.addEventListener("onCatalogAdd", event -> {
+        newWindow.addEventListener("onCatalogsChange", event -> {
             nonFilteredCatalogs = adminCatalogService.getAll();
             search();
             BindUtils.postNotifyChange(CatalogsVM.this, "catalogs");
@@ -59,12 +59,20 @@ public class CatalogsVM {
     public void edit(@BindingParam("catalogId") Long catalogId) {
         CatalogDTO catalog = getCatalogs().stream().filter(catalogDTO -> catalogDTO.getId().equals(catalogId)).toList().get(0);
         Map<String, CatalogDTO> args = Map.of("catalog", catalog);
-        Window newWindow = (Window) Executions.createComponents("", window, args);
-        newWindow.addEventListener("onCatalogAdd", event -> {
+        Window newWindow = (Window) Executions.createComponents("~./catalogs/editCatalog.zul", window, args);
+        newWindow.addEventListener("onCatalogsChange", event -> {
             nonFilteredCatalogs = adminCatalogService.getAll();
             search();
             BindUtils.postNotifyChange(CatalogsVM.this, "catalogs");
         });
+    }
+
+    @Command("delete")
+    @NotifyChange("catalogs")
+    public void delete(@BindingParam("catalogId") Long catalogId) {
+        adminCatalogService.delete(catalogId);
+        nonFilteredCatalogs = adminCatalogService.getAll();
+        search();
     }
 
     @Command("open")

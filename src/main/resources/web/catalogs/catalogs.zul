@@ -15,7 +15,8 @@
             <listhead>
                 <listheader label="Image"/>
                 <listheader label="Name"/>
-                <listheader label="Action"/>
+                <listheader label="Edit"/>
+                <listheader label="Delete"/>
             </listhead>
             <template name="model" var="catalog">
                 <listitem onDoubleClick="@command('open',catalogId=catalog.id)">
@@ -27,6 +28,9 @@
                     </listcell>
                     <listcell>
                         <button label="edit" onClick="@command('edit',catalogId=catalog.id)"/>
+                    </listcell>
+                    <listcell>
+                        <button label="delete" onClick="@command('delete',catalogId=catalog.id)"/>
                     </listcell>
                 </listitem>
             </template>

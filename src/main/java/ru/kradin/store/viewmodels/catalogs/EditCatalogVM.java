@@ -8,22 +8,27 @@ import org.zkoss.zkplus.spring.DelegatingVariableResolver;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
-import ru.kradin.store.DTOs.CatalogCreateDTO;
+import ru.kradin.store.DTOs.CatalogDTO;
+import ru.kradin.store.DTOs.CatalogEditDTO;
 import ru.kradin.store.services.interfaces.AdminCatalogService;
 
 @VariableResolver(DelegatingVariableResolver.class)
-public class NewCatalogVM {
+public class EditCatalogVM {
     private Window window;
-    private CatalogCreateDTO newCatalog = new CatalogCreateDTO();
+    private CatalogDTO editCatalog;
+    private CatalogEditDTO catalog = new CatalogEditDTO();
 
     @WireVariable("catalogServiceImp")
     private AdminCatalogService adminCatalogService;
 
     @AfterCompose
-    public void afterCompose(@ContextParam(ContextType.VIEW) Window window) {
+    public void afterCompose(@ContextParam(ContextType.VIEW) Window window,
+                             @ExecutionArgParam("catalog") CatalogDTO editCatalog) {
         this.window = window;
-        newCatalog.setName("");
-        newCatalog.setImageURL("");
+        this.editCatalog = editCatalog;
+        catalog.setId(editCatalog.getId());
+        catalog.setName(editCatalog.getName());
+        catalog.setImageURL(editCatalog.getImageURL());
     }
 
     @Command("close")
@@ -33,27 +38,27 @@ public class NewCatalogVM {
 
     @Command("save")
     public void save() {
-        if (newCatalog.getName().isBlank() || newCatalog.getImageURL().isBlank()) {
+        if (catalog.getName().isBlank() || catalog.getImageURL().isBlank()) {
             Messagebox.show("Name and image url cannot be empty","Error",Messagebox.OK,Messagebox.ERROR);
         } else {
-            adminCatalogService.create(newCatalog);
+            adminCatalogService.update(catalog);
             Events.postEvent("onCatalogsChange", window, null);
             close();
         }
     }
 
     @Command("cancel")
-    @NotifyChange("newCatalog")
+    @NotifyChange("catalog")
     public void cancel() {
-        newCatalog.setName("");
-        newCatalog.setImageURL("");
+        catalog.setName(editCatalog.getName());
+        catalog.setImageURL(editCatalog.getImageURL());
     }
 
-    public CatalogCreateDTO getNewCatalog() {
-        return newCatalog;
+    public CatalogEditDTO getcatalog() {
+        return catalog;
     }
 
-    public void setNewCatalog(CatalogCreateDTO newCatalog) {
-        this.newCatalog = newCatalog;
+    public void setNewCatalog(CatalogEditDTO catalog) {
+        this.catalog = catalog;
     }
 }
