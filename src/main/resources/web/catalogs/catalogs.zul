@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul  http://www.zkoss.org/2005/zul/zul.xsd">
+    <window width="100%" height="100%" border="normal"
+            viewModel="@id('vm') @init('ru.kradin.store.viewmodels.catalogs.CatalogsVM')">
+        <hbox>
+            <label value="Key word:"/>
+            <textbox value="@bind(vm.keyWord)"/>
+            <button label="search" onClick="@command('search')"/>
+            <separator width="50px"/>
+            <button label="new catalog" onClick="@command('newCatalog')"/>
+        </hbox>
+        <listbox height="100%" model="@load(vm.catalogs)" emptyMessage="Catalogs not found">
+            <listhead>
+                <listheader label="Image"/>
+                <listheader label="Name"/>
+                <listheader label="Action"/>
+            </listhead>
+            <template name="model" var="catalog">
+                <listitem onDoubleClick="@command('open',catalogId=catalog.id)">
+                    <listcell>
+                        <image width="50px" height="50px" src="@load(catalog.imageURL)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(catalog.name)"/>
+                    </listcell>
+                    <listcell>
+                        <button label="edit" onClick="@command('edit',catalogId=catalog.id)"/>
+                    </listcell>
+                </listitem>
+            </template>
+        </listbox>
+    </window>
+</zk>

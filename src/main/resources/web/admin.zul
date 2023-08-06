@@ -11,7 +11,7 @@
                 <tab label="Settings" />
             </tabs>
             <tabpanels>
-                <tabpanel>Catalogs</tabpanel>
+                <tabpanel><include src="~./catalogs/catalogs.zul"/></tabpanel>
                 <tabpanel>Orders</tabpanel>
                 <tabpanel><include src="~./users/users.zul"/></tabpanel>
                 <tabpanel><include src="~./settings/settings.zul"/></tabpanel>

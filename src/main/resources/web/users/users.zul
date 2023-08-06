@@ -9,7 +9,7 @@
             <textbox value="@bind(vm.keyWord)"/>
             <button label="search" onClick="@command('search')"/>
         </hbox>
-        <listbox model="@load(vm.users)">
+        <listbox height="100%" model="@load(vm.users)">
             <listhead>
                 <listheader label="Username" width="13%"/>
                 <listheader label="First name"/>

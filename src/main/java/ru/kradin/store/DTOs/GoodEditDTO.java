@@ -1,12 +1,11 @@
 package ru.kradin.store.DTOs;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
-import org.springframework.web.multipart.MultipartFile;
 
 public class GoodEditDTO extends AbstractPersistable<Long> {
     private String name;
     private String description;
-    private MultipartFile image;
+    private String imageURL;
     private Long inStock;
     private long price;
 
@@ -30,12 +29,12 @@ public class GoodEditDTO extends AbstractPersistable<Long> {
         this.description = description;
     }
 
-    public MultipartFile getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public Long getInStock() {

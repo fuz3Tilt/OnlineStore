@@ -1,11 +1,10 @@
 package ru.kradin.store.DTOs;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
-import org.springframework.web.multipart.MultipartFile;
 
 public class CatalogEditDTO extends AbstractPersistable<Long> {
     private String name;
-    private MultipartFile image;
+    private String imageURL;
 
     public void setId(Long id) {
         super.setId(id);
@@ -18,11 +17,11 @@ public class CatalogEditDTO extends AbstractPersistable<Long> {
         this.name = name;
     }
 
-    public MultipartFile getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

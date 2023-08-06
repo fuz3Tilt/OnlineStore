@@ -1,2 +1,91 @@
-package ru.kradin.store.viewmodels.catalogs;public class VatalogsVM {
+package ru.kradin.store.viewmodels.catalogs;
+
+import org.zkoss.bind.BindUtils;
+import org.zkoss.bind.annotation.*;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.select.annotation.VariableResolver;
+import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zkplus.spring.DelegatingVariableResolver;
+import org.zkoss.zul.Window;
+import ru.kradin.store.DTOs.CatalogDTO;
+import ru.kradin.store.services.interfaces.AdminCatalogService;
+
+import java.util.List;
+import java.util.Map;
+
+@VariableResolver(DelegatingVariableResolver.class)
+public class CatalogsVM {
+    private Window window;
+    private List<CatalogDTO> nonFilteredCatalogs;
+    private List<CatalogDTO> searchedCatalogs;
+    private String keyWord = "";
+
+    @WireVariable("catalogServiceImp")
+    private AdminCatalogService adminCatalogService;
+
+    @AfterCompose
+    public void afterCompose(@ContextParam(ContextType.VIEW) Window window) {
+        this.window = window;
+        this.nonFilteredCatalogs = adminCatalogService.getAll();
+    }
+
+    @Command("search")
+    @NotifyChange("catalogs")
+    public void search() {
+        if (keyWord.isEmpty() || keyWord.isBlank()) {
+            searchedCatalogs = null;
+        } else {
+            searchedCatalogs = nonFilteredCatalogs.stream().filter(catalog -> {
+                if (catalog.getName().toLowerCase().contains(keyWord.toLowerCase())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }).toList();
+        }
+    }
+
+    @Command("newCatalog")
+    public void newCatalog() {
+        Window newWindow = (Window) Executions.createComponents("~./catalogs/newCatalog.zul", window, null);
+        newWindow.addEventListener("onCatalogAdd", event -> {
+            nonFilteredCatalogs = adminCatalogService.getAll();
+            search();
+            BindUtils.postNotifyChange(CatalogsVM.this, "catalogs");
+        });
+    }
+
+    @Command("edit")
+    public void edit(@BindingParam("catalogId") Long catalogId) {
+        CatalogDTO catalog = getCatalogs().stream().filter(catalogDTO -> catalogDTO.getId().equals(catalogId)).toList().get(0);
+        Map<String, CatalogDTO> args = Map.of("catalog", catalog);
+        Window newWindow = (Window) Executions.createComponents("", window, args);
+        newWindow.addEventListener("onCatalogAdd", event -> {
+            nonFilteredCatalogs = adminCatalogService.getAll();
+            search();
+            BindUtils.postNotifyChange(CatalogsVM.this, "catalogs");
+        });
+    }
+
+    @Command("open")
+    public void open(@BindingParam("catalogId") Long catalogId) {
+        CatalogDTO catalog = getCatalogs().stream().filter(catalogDTO -> catalogDTO.getId().equals(catalogId)).toList().get(0);
+        Map<String, CatalogDTO> args = Map.of("catalog", catalog);
+        Executions.createComponents("", window, args);
+    }
+
+    public List<CatalogDTO> getCatalogs() {
+        if (searchedCatalogs == null)
+            return nonFilteredCatalogs;
+        else
+            return searchedCatalogs;
+    }
+
+    public String getKeyWord() {
+        return keyWord;
+    }
+
+    public void setKeyWord(String keyWord) {
+        this.keyWord = keyWord;
+    }
 }

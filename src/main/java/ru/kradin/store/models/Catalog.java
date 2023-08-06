@@ -9,6 +9,7 @@ import java.util.List;
 public class Catalog extends AbstractPersistable<Long> {
     @Column(nullable = false, unique = true, length = 50)
     private String name;
+    @Lob
     @Column(nullable = false)
     private String imageURL;
     @OneToMany(mappedBy = "catalog", cascade = CascadeType.MERGE, orphanRemoval = true)

@@ -1,10 +1,8 @@
 package ru.kradin.store.DTOs;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class CatalogCreateDTO {
     private String name;
-    private MultipartFile image;
+    private String imageURL;
 
     public String getName() {
         return name;
@@ -14,11 +12,11 @@ public class CatalogCreateDTO {
         this.name = name;
     }
 
-    public MultipartFile getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

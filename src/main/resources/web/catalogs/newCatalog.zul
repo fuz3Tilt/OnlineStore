@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul  http://www.zkoss.org/2005/zul/zul.xsd">
+    <window vflex="1" width="50%" border="normal"
+            mode="modal" closable="true" onCancel="@command('close')"
+            viewModel="@id('vm') @init('ru.kradin.store.viewmodels.catalogs.NewCatalogVM')">
+        <listbox vflex="1">
+            <listhead>
+                <listheader/>
+                <listheader/>
+            </listhead>
+            <listitem>
+                <listcell>
+                    <label value="Name"/>
+                </listcell>
+                <listcell>
+                    <textbox value="@bind(vm.newCatalog.name)" constraint="no empty"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Image URL"/>
+                </listcell>
+                <listcell>
+                    <textbox value="@bind(vm.newCatalog.imageURL)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Image"/>
+                </listcell>
+                <listcell>
+                    <image src="@bind(vm.newCatalog.imageURL)"/>
+                </listcell>
+            </listitem>
+        </listbox>
+        <hbox>
+            <button label="save" onClick="@command('save')"/>
+            <button label="cancel" onClick="@command('cancel')"/>
+            <button label="close" onClick="@command('close')"/>
+        </hbox>
+    </window>
+</zk>

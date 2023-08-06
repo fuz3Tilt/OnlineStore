@@ -7,8 +7,10 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 public class Good extends AbstractPersistable<Long> {
     @Column(nullable = false,unique = true,length = 50)
     private String name;
-    @Column(nullable = false,length = 500)
+    @Lob
+    @Column(nullable = false)
     private String description;
+    @Lob
     @Column(nullable = false)
     private String imageURL;
     @Column(nullable = false)

@@ -1,14 +1,12 @@
 package ru.kradin.store.DTOs;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class GoodCreateDTO {
     private String name;
     private String description;
-    private MultipartFile image;
+    private String imageURL;
     private Long inStock;
     private long price;
-    private CatalogDTO catalog;
+    private Long catalogId;
 
     public String getName() {
         return name;
@@ -26,12 +24,12 @@ public class GoodCreateDTO {
         this.description = description;
     }
 
-    public MultipartFile getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public Long getInStock() {
@@ -50,11 +48,11 @@ public class GoodCreateDTO {
         this.price = price;
     }
 
-    public CatalogDTO getCatalog() {
-        return catalog;
+    public Long getCatalogId() {
+        return catalogId;
     }
 
-    public void setCatalog(CatalogDTO catalog) {
-        this.catalog = catalog;
+    public void setCatalogId(Long catalogId) {
+        this.catalogId = catalogId;
     }
 }

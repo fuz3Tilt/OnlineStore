@@ -5,13 +5,10 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import ru.kradin.store.DTOs.CatalogDTO;
 import ru.kradin.store.DTOs.GoodCreateDTO;
 import ru.kradin.store.DTOs.GoodDTO;
 import ru.kradin.store.DTOs.GoodEditDTO;
@@ -20,9 +17,7 @@ import ru.kradin.store.models.Good;
 import ru.kradin.store.repositories.CatalogRepository;
 import ru.kradin.store.repositories.GoodRepository;
 import ru.kradin.store.services.interfaces.AdminGoodService;
-import ru.kradin.store.services.interfaces.ImageService;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -35,12 +30,9 @@ public class GoodServiceImp implements AdminGoodService {
     private GoodRepository goodRepository;
     @Autowired
     private CatalogRepository catalogRepository;
-    @Autowired
-    private ImageService imageService;
-    @Value("${store.imagesURL}")
-    private String imagesURL;
-    private static final String IMAGE_NOT_FOUND = "IMAGE_NOT_FOUND";
+
     @Override
+    @Transactional
     public List<GoodDTO> getAll() {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
         List<Good> goodList = goodRepository.findAll(sort);
@@ -49,6 +41,7 @@ public class GoodServiceImp implements AdminGoodService {
     }
 
     @Override
+    @Transactional
     public List<GoodDTO> getByCatalogId(Long catalogId) {
         List<Good> goodList = goodRepository.findByCatalog_IdOrderByNameAsc(catalogId);
         List<GoodDTO> goodDTOList = modelMapper.map(goodList, new TypeToken<List<GoodDTO>>() {}.getType());
@@ -62,10 +55,10 @@ public class GoodServiceImp implements AdminGoodService {
         Good good = new Good(
                 goodCreateDTO.getName(),
                 goodCreateDTO.getDescription(),
-                saveAndGetURL(goodCreateDTO.getImage()),
+                goodCreateDTO.getImageURL(),
                 goodCreateDTO.getInStock(),
                 goodCreateDTO.getPrice(),
-                getCatalog(goodCreateDTO.getCatalog())
+                getCatalog(goodCreateDTO.getCatalogId())
         );
         goodRepository.save(good);
         log.info("Good {} saved.",goodCreateDTO.getName());
@@ -80,10 +73,7 @@ public class GoodServiceImp implements AdminGoodService {
         good.setDescription(goodEditDTO.getDescription());
         good.setInStock(goodEditDTO.getInStock());
         good.setPrice(goodEditDTO.getPrice());
-        if (goodEditDTO.getImage() != null && !goodEditDTO.getImage().isEmpty()) {
-            deleteImage(good.getImageURL());
-            good.setImageURL(saveAndGetURL(goodEditDTO.getImage()));
-        }
+        good.setImageURL(goodEditDTO.getImageURL());
         goodRepository.save(good);
         log.info("Good {} updated.",good.getName());
     }
@@ -93,32 +83,11 @@ public class GoodServiceImp implements AdminGoodService {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(Long goodId) {
         Good good = goodRepository.findById(goodId).get();
-        deleteImage(good.getImageURL());
         goodRepository.delete(good);
         log.info("Good {} deleted.",good.getName());
     }
 
-    private String saveAndGetURL(MultipartFile image) {
-        String imageURL = "";
-        try {
-            imageURL = imagesURL + imageService.save(image);
-        } catch (IOException e) {
-            imageURL = imagesURL + IMAGE_NOT_FOUND;
-            log.error("Image error then tried to save.");
-        }
-        return imageURL;
-    }
-
-    private void deleteImage(String oldImageURL) {
-        try {
-            if (!oldImageURL.equals(imagesURL+IMAGE_NOT_FOUND))
-                imageService.delete(oldImageURL.substring(imagesURL.length()));
-        } catch (IOException e) {
-            log.error("Image error the tried to delete.");
-        }
-    }
-
-    private Catalog getCatalog(CatalogDTO catalogDTO) {
-        return catalogRepository.findById(catalogDTO.getId()).get();
+    private Catalog getCatalog(Long catalogId) {
+        return catalogRepository.findById(catalogId).get();
     }
 }
