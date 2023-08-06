@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul  http://www.zkoss.org/2005/zul/zul.xsd">
     <window vflex="1" width="50%" border="normal"
             mode="modal" closable="true" onCancel="@command('close')"
-            viewModel="@id('vm') @init('ru.kradin.store.viewmodels.catalogs.EditCatalogVM')">
+            viewModel="@id('vm') @init('ru.kradin.store.viewmodels.goods.EditGoodVM')">
         <listbox vflex="1">
             <listhead>
                 <listheader/>
@@ -15,7 +15,31 @@
                     <label value="Name"/>
                 </listcell>
                 <listcell>
-                    <textbox value="@bind(vm.catalog.name)" constraint="no empty"/>
+                    <textbox value="@bind(vm.good.name)" constraint="no empty"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Description"/>
+                </listcell>
+                <listcell>
+                    <textbox value="@bind(vm.good.description)" constraint="no empty"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Price"/>
+                </listcell>
+                <listcell>
+                    <intbox value="@bind(vm.good.price)" constraint="no negative"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="In stock"/>
+                </listcell>
+                <listcell>
+                    <intbox value="@bind(vm.good.inStock)" constraint="no negative"/>
                 </listcell>
             </listitem>
             <listitem>
@@ -23,7 +47,7 @@
                     <label value="Image URL"/>
                 </listcell>
                 <listcell>
-                    <textbox value="@bind(vm.catalog.imageURL)"  constraint="no empty"/>
+                    <textbox value="@bind(vm.good.imageURL)" constraint="no empty"/>
                 </listcell>
             </listitem>
             <listitem>
@@ -31,7 +55,7 @@
                     <label value="Image"/>
                 </listcell>
                 <listcell>
-                    <image src="@bind(vm.catalog.imageURL)"/>
+                    <image src="@bind(vm.good.imageURL)"/>
                 </listcell>
             </listitem>
         </listbox>

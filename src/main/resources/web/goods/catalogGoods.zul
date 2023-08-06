@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul  http://www.zkoss.org/2005/zul/zul.xsd">
+    <window height="80%" width="80%" border="normal"
+            mode="modal" closable="true" onCancel="@command('close')"
+            viewModel="@id('vm') @init('ru.kradin.store.viewmodels.goods.CatalogGoodsVM')">
+        <vbox>
+            <hbox>
+                <label value="@load(vm.parentCatalog.name)"/>
+                <separator width="50px"/>
+                <button label="close" onClick="@command('close')"/>
+            </hbox>
+            <separator height="10px"/>
+            <hbox>
+                <label value="Key word:"/>
+                <textbox value="@bind(vm.keyWord)"/>
+                <button label="search" onClick="@command('search')"/>
+                <separator width="50px"/>
+                <button label="new good" onClick="@command('newGood')"/>
+            </hbox>
+        </vbox>
+        <listbox height="100%" model="@load(vm.goods)" emptyMessage="Goods not found">
+            <listhead>
+                <listheader label="Image"/>
+                <listheader label="Name"/>
+                <listheader label="Price"/>
+                <listheader label="In stock"/>
+                <listheader label="Edit"/>
+                <listheader label="Delete"/>
+            </listhead>
+            <template name="model" var="good">
+                <listitem onDoubleClick="@command('open',goodId=good.id)">
+                    <listcell>
+                        <image width="50px" height="50px" src="@load(good.imageURL)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(good.name)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(good.price)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(good.inStock)"/>
+                    </listcell>
+                    <listcell>
+                        <button label="edit" onClick="@command('edit',goodId=good.id)"/>
+                    </listcell>
+                    <listcell>
+                        <button label="delete" onClick="@command('delete',goodId=good.id)"/>
+                    </listcell>
+                </listitem>
+            </template>
+        </listbox>
+    </window>
+</zk>

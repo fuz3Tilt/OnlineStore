@@ -6,7 +6,7 @@ public class GoodEditDTO extends AbstractPersistable<Long> {
     private String name;
     private String description;
     private String imageURL;
-    private Long inStock;
+    private long inStock;
     private long price;
 
     public void setId(Long id) {
@@ -37,11 +37,11 @@ public class GoodEditDTO extends AbstractPersistable<Long> {
         this.imageURL = imageURL;
     }
 
-    public Long getInStock() {
+    public long getInStock() {
         return inStock;
     }
 
-    public void setInStock(Long inStock) {
+    public void setInStock(long inStock) {
         this.inStock = inStock;
     }
 

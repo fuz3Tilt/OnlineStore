@@ -79,7 +79,7 @@ public class CatalogsVM {
     public void open(@BindingParam("catalogId") Long catalogId) {
         CatalogDTO catalog = getCatalogs().stream().filter(catalogDTO -> catalogDTO.getId().equals(catalogId)).toList().get(0);
         Map<String, CatalogDTO> args = Map.of("catalog", catalog);
-        Executions.createComponents("", window, args);
+        Executions.createComponents("~./goods/catalogGoods.zul", window, args);
     }
 
     public List<CatalogDTO> getCatalogs() {

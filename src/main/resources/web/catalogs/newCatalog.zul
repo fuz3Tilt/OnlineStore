@@ -23,7 +23,7 @@
                     <label value="Image URL"/>
                 </listcell>
                 <listcell>
-                    <textbox value="@bind(vm.newCatalog.imageURL)"/>
+                    <textbox value="@bind(vm.newCatalog.imageURL)" constraint="no empty"/>
                 </listcell>
             </listitem>
             <listitem>
