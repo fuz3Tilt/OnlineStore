@@ -13,7 +13,7 @@ import ru.kradin.store.exceptions.PasswordMismatchException;
 import ru.kradin.store.exceptions.VerificationTokenNotFoundException;
 import ru.kradin.store.models.User;
 import ru.kradin.store.repositories.UserRepository;
-import ru.kradin.store.services.interfaces.CurrentUserService;
+import ru.kradin.store.services.interfaces.CurrentSessionService;
 import ru.kradin.store.services.interfaces.EmailVerificationService;
 import ru.kradin.store.services.interfaces.UserService;
 
@@ -32,7 +32,7 @@ public class UserServiceImp implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private CurrentUserService currentUserService;
+    private CurrentSessionService currentSessionService;
 
     @Autowired
     private EmailVerificationService emailVerificationService;
@@ -40,7 +40,7 @@ public class UserServiceImp implements UserService {
     @Override
     @PreAuthorize("isAuthenticated()")
     public UserDTO getCurrent() {
-        User user = currentUserService.get();
+        User user = currentSessionService.getUser();
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         return userDTO;
     }
@@ -55,7 +55,7 @@ public class UserServiceImp implements UserService {
     @PreAuthorize("isAuthenticated()")
     public void updateEmail(String email, Integer token) throws VerificationTokenNotFoundException {
         if (emailVerificationService.isEmailVerified(email, token)) {
-            User user = currentUserService.get();
+            User user = currentSessionService.getUser();
             user.setEmail(email);
             user.setEmailVerified(true);
             userRepository.save(user);
@@ -69,7 +69,7 @@ public class UserServiceImp implements UserService {
     @Transactional
     @PreAuthorize("isAuthenticated()")
     public void updatePassword(String oldPassword, String newPassword, String passwordConfirm) throws PasswordMismatchException {
-        User user = currentUserService.get();
+        User user = currentSessionService.getUser();
         if (!newPassword.equals(passwordConfirm))
             throw new PasswordMismatchException("Passwords don't match");
 
@@ -88,7 +88,7 @@ public class UserServiceImp implements UserService {
     @Transactional
     @PreAuthorize("isAuthenticated()")
     public void updateFullName(String firstName, String middleName, String lastName) {
-        User user = currentUserService.get();
+        User user = currentSessionService.getUser();
         user.setFirstName(firstName);
         user.setMiddleName(middleName);
         user.setLastName(lastName);

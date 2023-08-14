@@ -18,6 +18,9 @@ import ru.kradin.store.services.interfaces.RegistrationService;
 
 import java.time.LocalDateTime;
 
+/**
+ * Uses for registration
+ */
 @Service
 public class RegistrationServiceImp implements RegistrationService {
     private static final Logger log = LoggerFactory.getLogger(RegistrationServiceImp.class);
@@ -33,6 +36,9 @@ public class RegistrationServiceImp implements RegistrationService {
     @Autowired
     EmailVerificationService emailVerificationService;
 
+    /**
+     * Use UserValidator in a controller before perform!!!
+     */
     @Override
     @Transactional
     public void register(RegistrationDTO registrationDTO) throws VerificationTokenNotFoundException {

@@ -6,6 +6,9 @@ import ru.kradin.store.exceptions.UserNotFoundException;
 
 import java.util.List;
 
+/**
+ * Uses for management users
+ */
 public interface AdminService {
 
     public List<UserDTO> getUsers();

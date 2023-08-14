@@ -9,7 +9,7 @@ public class GoodEditDTO extends AbstractPersistable<Long> {
     private long inStock;
     private long price;
 
-    public void setId(Long id) {
+    public void setId(long id) {
         super.setId(id);
     }
 

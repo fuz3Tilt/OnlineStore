@@ -16,7 +16,7 @@ import ru.kradin.store.repositories.GoodRepository;
 import ru.kradin.store.repositories.OrderGoodQuantityRepository;
 import ru.kradin.store.repositories.OrderRepository;
 import ru.kradin.store.services.interfaces.AdminOrderService;
-import ru.kradin.store.services.interfaces.CurrentUserService;
+import ru.kradin.store.services.interfaces.CurrentSessionService;
 import ru.kradin.store.services.interfaces.UserOrderService;
 
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ public class OrderServiceImp implements AdminOrderService, UserOrderService {
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
-    private CurrentUserService currentUserService;
+    private CurrentSessionService currentSessionService;
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -41,7 +41,7 @@ public class OrderServiceImp implements AdminOrderService, UserOrderService {
     @Override
     @PreAuthorize("isAuthenticated()")
     public List<OrderDTO> getOrders() {
-        List<Order> orderList = orderRepository.findByUser(currentUserService.get());
+        List<Order> orderList = orderRepository.findByUser(currentSessionService.getUser());
         for (Order order:orderList) {
             List<OrderGoodQuantity> orderGoodQuantityList = orderGoodQuantityRepository.findByOrder(order);
             order.setGoodQuantityList(orderGoodQuantityList);
@@ -55,7 +55,7 @@ public class OrderServiceImp implements AdminOrderService, UserOrderService {
     @PreAuthorize("isAuthenticated()")
     public void create(OrderCreateDTO orderCreateDTO) {
         Order order = new Order(
-                currentUserService.get(),
+                currentSessionService.getUser(),
                 orderCreateDTO.getAddress(),
                 orderCreateDTO.getPostalCode(),
                 orderCreateDTO.getMessage(),
@@ -63,7 +63,7 @@ public class OrderServiceImp implements AdminOrderService, UserOrderService {
         );
         order = orderRepository.save(order);
 
-        Cart cart = cartRepository.findByUser(currentUserService.get());
+        Cart cart = cartRepository.findByUser(currentSessionService.getUser());
         List<OrderGoodQuantity> orderGoodQuantityList = new ArrayList<>();
         for (CartGoodQuantity cartGoodQuantity : cart.getGoodQuantityList()) {
             OrderGoodQuantity orderGoodQuantity = new OrderGoodQuantity(
@@ -86,7 +86,7 @@ public class OrderServiceImp implements AdminOrderService, UserOrderService {
     @PreAuthorize("isAuthenticated()")
     public void create(OrderCreateDTO orderCreateDTO, GoodQuantityCreateDTO goodQuantityCreateDTO) {
         Order order = new Order(
-                currentUserService.get(),
+                currentSessionService.getUser(),
                 orderCreateDTO.getAddress(),
                 orderCreateDTO.getPostalCode(),
                 orderCreateDTO.getMessage(),

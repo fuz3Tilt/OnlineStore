@@ -19,7 +19,7 @@
                 <listheader label="Delete"/>
             </listhead>
             <template name="model" var="catalog">
-                <listitem onDoubleClick="@command('open',catalogId=catalog.id)">
+                <listitem onDoubleClick="@command('open',catalog=catalog)">
                     <listcell>
                         <image width="50px" height="50px" src="@load(catalog.imageURL)"/>
                     </listcell>
@@ -27,10 +27,10 @@
                         <label value="@load(catalog.name)"/>
                     </listcell>
                     <listcell>
-                        <button label="edit" onClick="@command('edit',catalogId=catalog.id)"/>
+                        <button label="edit" onClick="@command('edit',catalog=catalog)"/>
                     </listcell>
                     <listcell>
-                        <button label="delete" onClick="@command('delete',catalogId=catalog.id)"/>
+                        <button label="delete" onClick="@command('delete',catalog=catalog)"/>
                     </listcell>
                 </listitem>
             </template>

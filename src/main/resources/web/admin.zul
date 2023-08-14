@@ -12,7 +12,7 @@
             </tabs>
             <tabpanels>
                 <tabpanel><include src="~./catalogs/catalogs.zul"/></tabpanel>
-                <tabpanel>Orders</tabpanel>
+                <tabpanel><include src="~./orders/orders.zul"/></tabpanel>
                 <tabpanel><include src="~./users/users.zul"/></tabpanel>
                 <tabpanel><include src="~./settings/settings.zul"/></tabpanel>
             </tabpanels>

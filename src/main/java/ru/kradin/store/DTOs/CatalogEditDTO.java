@@ -6,7 +6,7 @@ public class CatalogEditDTO extends AbstractPersistable<Long> {
     private String name;
     private String imageURL;
 
-    public void setId(Long id) {
+    public void setId(long id) {
         super.setId(id);
     }
     public String getName() {

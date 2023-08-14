@@ -9,7 +9,7 @@ public class CatalogDTO extends AbstractPersistable<Long> {
     private String imageURL;
     private List<GoodDTO> goodList;
 
-    public void setId(Long id) {
+    public void setId(long id) {
         super.setId(id);
     }
     public String getName() {

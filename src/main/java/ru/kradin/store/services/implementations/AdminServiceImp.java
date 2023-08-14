@@ -53,8 +53,10 @@ public class AdminServiceImp implements AdminService {
     private void toggleAccountNonLockedField(User user) {
         if (user.isAccountNonLocked()) {
             user.setAccountNonLocked(false);
+            log.info("User {} locked.", user.getUsername());
         } else {
             user.setAccountNonLocked(true);
+            log.info("User {} unlocked.", user.getUsername());
         }
     }
 }

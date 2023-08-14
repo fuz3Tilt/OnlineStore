@@ -7,7 +7,7 @@ import java.util.List;
 public class CartDTO extends AbstractPersistable<Long> {
     List<CartGoodQuantityDTO> goodQuantityList;
 
-    public void setId(Long id) {
+    public void setId(long id) {
         super.setId(id);
     }
 

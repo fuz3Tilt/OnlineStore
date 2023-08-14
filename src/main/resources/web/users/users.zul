@@ -19,7 +19,7 @@
                 <listheader label="Toggle ban"/>
             </listhead>
             <template name="model" var="user">
-                <listitem onDoubleClick="@command('getAdditionalInfo', username=user.username)">
+                <listitem onDoubleClick="@command('getAdditionalInfo', user=user)">
                     <listcell label="@load(user.username)"/>
                     <listcell label="@load(user.firstName)"/>
                     <listcell label="@load(user.middleName)"/>

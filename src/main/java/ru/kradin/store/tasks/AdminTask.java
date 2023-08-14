@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.TimerTask;
 
+/**
+ * Uses for creating admin account if not exist
+ */
 public class AdminTask extends TimerTask {
     private static final Logger log = LoggerFactory.getLogger(AdminTask.class);
 

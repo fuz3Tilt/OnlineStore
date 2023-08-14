@@ -35,8 +35,6 @@ public class VerificationServiceImp implements EmailVerificationService, Passwor
     private UserRepository userRepository;
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private CurrentUserService currentUserService;
 
     @Value("${store.passwordResetURL}")
     private String passwordResetUrl;

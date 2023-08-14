@@ -10,6 +10,9 @@ import ru.kradin.store.repositories.UserRepository;
 
 import java.util.Optional;
 
+/**
+ * Uses for validating new users in a controller. Use before performe register(RegistrationDTO registrationDTO)!!!
+ */
 @Component
 public class UserValidator implements Validator {
 

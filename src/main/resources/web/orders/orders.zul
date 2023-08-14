@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul  http://www.zkoss.org/2005/zul/zul.xsd">
+    <window width="100%" height="100%" border="normal"
+            viewModel="@id('vm') @init('ru.kradin.store.viewmodels.orders.OrdersVM')">
+        <hbox>
+            <label value="Key word:"/>
+            <textbox value="@bind(vm.keyWord)"/>
+            <button label="search" onClick="@command('search')"/>
+        </hbox>
+        <listbox height="100%" model="@load(vm.orders)" emptyMessage="Orders not found">
+            <listhead>
+                <listheader label="Username"/>
+                <listheader label="Address"/>
+                <listheader label="Track Code"/>
+                <listheader label="Status"/>
+            </listhead>
+            <template name="model" var="order">
+                <listitem onDoubleClick="@command('open',order=order)">
+                    <listcell>
+                        <label value="@load(order.user.username)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(order.address)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(order.trackCode)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(order.status)"/>
+                    </listcell>
+                </listitem>
+            </template>
+        </listbox>
+    </window>
+</zk>

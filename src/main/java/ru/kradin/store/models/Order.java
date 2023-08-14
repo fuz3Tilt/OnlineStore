@@ -21,8 +21,6 @@ public class Order extends AbstractPersistable<Long> {
     private Integer postalCode;
     @Column(nullable = false)
     private String message;
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
-    private List<AdditionalPrice> additionalPriceList;
     private String trackCode;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -82,14 +80,6 @@ public class Order extends AbstractPersistable<Long> {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public List<AdditionalPrice> getAdditionalPriceList() {
-        return additionalPriceList;
-    }
-
-    public void setAdditionalPriceList(List<AdditionalPrice> additionalPriceList) {
-        this.additionalPriceList = additionalPriceList;
     }
 
     public String getTrackCode() {

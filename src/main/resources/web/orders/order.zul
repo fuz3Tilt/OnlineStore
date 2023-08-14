@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul  http://www.zkoss.org/2005/zul/zul.xsd">
+    <window vflex="1" width="50%" border="normal"
+            mode="modal" closable="true" onCancel="@command('close')"
+            viewModel="@id('vm') @init('ru.kradin.store.viewmodels.orders.OrderVM')">
+        <listbox>
+            <listhead>
+                <listheader/>
+                <listheader/>
+            </listhead>
+            <listitem>
+                <listcell>
+                    <label value="Username:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.order.user.username)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Address:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.order.address)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Postal Code:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.order.postalCode)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Message:"/>
+                </listcell>
+                <listcell>
+                    <textbox value="@load(vm.order.message)" readonly="true"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Track Code:"/>
+                </listcell>
+                <listcell>
+                    <textbox value="@bind(vm.trackCode)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Status:"/>
+                </listcell>
+                <listcell>
+                    <selectbox model="@load(vm.statusList)" selectedIndex="@bind(vm.statusIndex)">
+                        <template name="model">
+                            ${each}
+                        </template>
+                    </selectbox>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Created:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.order.createdAt)"/>
+                </listcell>
+            </listitem>
+            <listitem>
+                <listcell>
+                    <label value="Closed:"/>
+                </listcell>
+                <listcell>
+                    <label value="@load(vm.order.closedAt)"/>
+                </listcell>
+            </listitem>
+        </listbox>
+        <hbox>
+            <button label="save" onClick="@command('save')"/>
+            <button label="cancel" onClick="@command('cancel')"/>
+            <button label="close" onClick="@command('close')"/>
+        </hbox>
+        <listbox height="100%" model="@load(vm.order.goodQuantityList)" emptyMessage="Goods not found">
+            <listhead>
+                <listheader label="Image"/>
+                <listheader label="Name"/>
+                <listheader label="Price"/>
+                <listheader label="In Stock"/>
+                <listheader label="Quantity"/>
+            </listhead>
+            <template name="model" var="goodQuantity">
+                <listitem>
+                    <listcell>
+                        <image width="50px" height="50px" src="@load(good.imageURL)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(goodQuantity.good.name)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(goodQuantity.good.price)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(goodQuantity.good.inStock)"/>
+                    </listcell>
+                    <listcell>
+                        <label value="@load(goodQuantity.quantity)"/>
+                    </listcell>
+                </listitem>
+            </template>
+            <listfoot >
+                 <listfooter>
+                    <label value="@load(vm.sum)"/>
+                </listfooter>
+             </listfoot>
+        </listbox>
+    </window>
+</zk>

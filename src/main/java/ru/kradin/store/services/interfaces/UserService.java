@@ -4,6 +4,9 @@ import ru.kradin.store.DTOs.UserDTO;
 import ru.kradin.store.exceptions.PasswordMismatchException;
 import ru.kradin.store.exceptions.VerificationTokenNotFoundException;
 
+/**
+ * Uses for management user data
+ */
 public interface UserService {
 
     public UserDTO getCurrent();

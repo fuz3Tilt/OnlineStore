@@ -59,28 +59,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests((requests) -> requests
-//                        .requestAntMatchers().hasRole("ADMIN")
-//                        .anyRequest().permitAll()
-//                )
-//                .formLogin((form) -> form
-//                        .loginPage("/login")
-//                        .defaultSuccessUrl("/store/web/admin.zul", true)
-//                        .failureUrl("/login?error")
-//                        .permitAll()
-//                )
-//                .logout((logout) -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login?logout")
-//                        .permitAll()
-//                )
-//                .csrf((httpSecurityCsrfConfigurer) -> httpSecurityCsrfConfigurer
-//                        .ignoringRequestMatchers(request -> request.isUserInRole("ADMIN"))
-//                );
-//        return http.build();
-//    }
-
 }

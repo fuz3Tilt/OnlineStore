@@ -14,7 +14,7 @@ import ru.kradin.store.repositories.CartGoodQuantityRepository;
 import ru.kradin.store.repositories.CartRepository;
 import ru.kradin.store.repositories.GoodRepository;
 import ru.kradin.store.services.interfaces.CartService;
-import ru.kradin.store.services.interfaces.CurrentUserService;
+import ru.kradin.store.services.interfaces.CurrentSessionService;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class CartServiceImp implements CartService {
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
-    private CurrentUserService currentUserService;
+    private CurrentSessionService currentSessionService;
     @Autowired
     private CartRepository cartRepository;
     @Autowired
@@ -34,7 +34,7 @@ public class CartServiceImp implements CartService {
     @Override
     @PreAuthorize("isAuthenticated()")
     public CartDTO getCurtOfCurrentUser() {
-        Cart cart = cartRepository.findByUser(currentUserService.get());
+        Cart cart = cartRepository.findByUser(currentSessionService.getUser());
         List<CartGoodQuantity> cartGoodQuantityList = cartGoodQuantityRepository.findByCart(cart);
         cart.setGoodQuantityList(cartGoodQuantityList);
         CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
@@ -45,7 +45,7 @@ public class CartServiceImp implements CartService {
     @Transactional
     @PreAuthorize("isAuthenticated()")
     public void changeGoodQuantity(GoodQuantityCreateDTO goodQuantityCreateDTO) {
-        Cart cart = cartRepository.findByUser(currentUserService.get());
+        Cart cart = cartRepository.findByUser(currentSessionService.getUser());
         Good good = goodRepository.findById(goodQuantityCreateDTO.getGoodId()).get();
         List<CartGoodQuantity> goodQuantityList = cart.getGoodQuantityList();
         CartGoodQuantity cartGoodQuantity = goodQuantityList.stream()
@@ -68,7 +68,7 @@ public class CartServiceImp implements CartService {
     @Transactional
     @PreAuthorize("isAuthenticated()")
     public void emptyCart() {
-        Cart cart = cartRepository.findByUser(currentUserService.get());
+        Cart cart = cartRepository.findByUser(currentSessionService.getUser());
         cart.getGoodQuantityList().clear();
         cartRepository.save(cart);
     }

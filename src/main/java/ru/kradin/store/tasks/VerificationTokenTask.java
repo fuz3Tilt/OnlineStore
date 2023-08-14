@@ -8,6 +8,9 @@ import ru.kradin.store.repositories.VerificationTokenRepository;
 import java.time.LocalDateTime;
 import java.util.TimerTask;
 
+/**
+ * Uses for cleaning expired tokens from DB
+ */
 public class VerificationTokenTask extends TimerTask {
     private static final Logger log = LoggerFactory.getLogger(VerificationTokenTask.class);
     private VerificationTokenRepository verificationTokenRepository;

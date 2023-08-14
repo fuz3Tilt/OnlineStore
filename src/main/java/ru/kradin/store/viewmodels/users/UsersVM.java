@@ -71,8 +71,7 @@ public class UsersVM {
     }
 
     @Command("getAdditionalInfo")
-    public void getAdditionalInfo(@BindingParam("username") String username) {
-        UserDTO user = getUsers().stream().filter(userDTO -> userDTO.getUsername().equals(username)).toList().get(0);
+    public void getAdditionalInfo(@BindingParam("user") UserDTO user) {
         Map<String,UserDTO> args = Map.of("user",user);
         Executions.createComponents("~./users/user.zul", window, args);
     }

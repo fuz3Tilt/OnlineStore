@@ -9,7 +9,7 @@ public class GoodDTO extends AbstractPersistable<Long> {
     private Long inStock;
     private long price;
 
-    public void setId(Long id) {
+    public void setId(long id) {
         super.setId(id);
     }
 

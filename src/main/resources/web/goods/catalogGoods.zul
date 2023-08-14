@@ -7,6 +7,7 @@
             viewModel="@id('vm') @init('ru.kradin.store.viewmodels.goods.CatalogGoodsVM')">
         <vbox>
             <hbox>
+                <image width="50px" height="50px" src="@load(vm.parentCatalog.imageURL)"/>
                 <label value="@load(vm.parentCatalog.name)"/>
                 <separator width="50px"/>
                 <button label="close" onClick="@command('close')"/>
@@ -25,12 +26,12 @@
                 <listheader label="Image"/>
                 <listheader label="Name"/>
                 <listheader label="Price"/>
-                <listheader label="In stock"/>
+                <listheader label="In Stock"/>
                 <listheader label="Edit"/>
                 <listheader label="Delete"/>
             </listhead>
             <template name="model" var="good">
-                <listitem onDoubleClick="@command('open',goodId=good.id)">
+                <listitem>
                     <listcell>
                         <image width="50px" height="50px" src="@load(good.imageURL)"/>
                     </listcell>
@@ -44,10 +45,10 @@
                         <label value="@load(good.inStock)"/>
                     </listcell>
                     <listcell>
-                        <button label="edit" onClick="@command('edit',goodId=good.id)"/>
+                        <button label="edit" onClick="@command('edit',good=good)"/>
                     </listcell>
                     <listcell>
-                        <button label="delete" onClick="@command('delete',goodId=good.id)"/>
+                        <button label="delete" onClick="@command('delete',good=good)"/>
                     </listcell>
                 </listitem>
             </template>

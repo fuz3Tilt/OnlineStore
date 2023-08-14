@@ -12,8 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping
-public class TestController {
+public class LoginController {
 
+    @GetMapping("/")
+    public String redirectToLoginPage() {
+        return "redirect:/login";
+    }
     @GetMapping("/login")
     public String login() {
         return "login";

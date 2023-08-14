@@ -12,6 +12,7 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zkplus.spring.DelegatingVariableResolver;
@@ -70,27 +71,29 @@ public class CatalogGoodsVM {
             nonFilteredGoods = adminGoodService.getByCatalogId(parentCatalog.getId());
             search();
             BindUtils.postNotifyChange(CatalogGoodsVM.this, "goods");
+            Events.postEvent("onGoodsChange", window, null);
         });
     }
 
     @Command("edit")
-    public void edit(@BindingParam("goodId") Long goodId) {
-        GoodDTO good = getGoods().stream().filter(goodDTO -> goodDTO.getId().equals(goodId)).toList().get(0);
+    public void edit(@BindingParam("good") GoodDTO good) {
         Map<String, GoodDTO> args = Map.of("good", good);
         Window newWindow = (Window) Executions.createComponents("~./goods/editGood.zul", window, args);
         newWindow.addEventListener("onGoodsChange", event -> {
             nonFilteredGoods = adminGoodService.getByCatalogId(parentCatalog.getId());
             search();
             BindUtils.postNotifyChange(CatalogGoodsVM.this, "goods");
+            Events.postEvent("onGoodsChange", window, null);
         });
     }
 
     @Command("delete")
     @NotifyChange("goods")
-    public void delete(@BindingParam("goodId") Long goodId) {
-        adminGoodService.delete(goodId);
-        nonFilteredGoods = adminGoodService.getByCatalogId(parentCatalog.getId());
+    public void delete(@BindingParam("good") GoodDTO good) {
+        adminGoodService.delete(good.getId());
+        nonFilteredGoods.remove(good);
         search();
+        Events.postEvent("onGoodsChange", window, null);
     }
 
     public List<GoodDTO> getGoods() {

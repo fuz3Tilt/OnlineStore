@@ -5,6 +5,9 @@ import ru.kradin.store.enums.Status;
 
 import java.util.List;
 
+/**
+ * Uses for management orders
+ */
 public interface AdminOrderService {
     public List<OrderDTO> getAll();
     public void setStatus(Status status, Long orderId);

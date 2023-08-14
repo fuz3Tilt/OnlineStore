@@ -9,9 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kradin.store.repositories.CartRepository;
 import ru.kradin.store.repositories.UserRepository;
 import ru.kradin.store.repositories.VerificationTokenRepository;
-import ru.kradin.store.services.interfaces.CryptoSettingsService;
 import ru.kradin.store.tasks.AdminTask;
-import ru.kradin.store.tasks.SecureTask;
 import ru.kradin.store.tasks.VerificationTokenTask;
 
 @Configuration
@@ -28,9 +26,6 @@ public class SchedulingConfig {
     private CartRepository cartRepository;
 
     @Autowired
-    private CryptoSettingsService cryptoSettingsService;
-
-    @Autowired
     private VerificationTokenRepository verificationTokenRepository;
 
     @Bean
@@ -43,11 +38,6 @@ public class SchedulingConfig {
         return new VerificationTokenTask(verificationTokenRepository);
     }
 
-    @Bean
-    public SecureTask secureTask() {
-        return new SecureTask(cryptoSettingsService);
-    }
-
     @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
     public void runAdminTask() {
         adminTask().run();
@@ -56,10 +46,5 @@ public class SchedulingConfig {
     @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
     public void runVerificationTokenTask() {
         verificationTokenTask().run();
-    }
-
-    @Scheduled(cron = "0 0 3 * * *")
-    public void runSecureTask() {
-        secureTask().run();
     }
 }
